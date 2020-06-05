@@ -4,9 +4,9 @@ import struct
 def _pack(msgid: int, dest: int, source: int, *, param1: int=0, param2: int=0, data: Optional[bytes]=None):
     if data is not None:
         assert param1 == param2 == 0
-        return struct.pack("<HHcc", msgid, len(data), dest | 0x80, source) + data
+        return struct.pack("<HHbb", msgid, len(data), dest | 0x80, source) + data
     else:
-        return struct.pack("<H4c", msgid, param1, param2, dest, source)
+        return struct.pack("<H4b", msgid, param1, param2, dest, source)
 
 def mot_move_home(dest: int, source: int):
     return _pack(0x0443, dest, source)
