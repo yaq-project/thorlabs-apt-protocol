@@ -20,7 +20,8 @@ class Unpacker:
 
     def __next__(self):
         try:
-            pos = self._file.tell()
+            if self._file.seekable():
+                pos = self._file.tell()
             header = self._file.read(6)
             long_form = header[4] & 0x80
             msgid, length = struct.unpack_from("<HH", header)
@@ -28,7 +29,8 @@ class Unpacker:
             if long_form:
                 data = header + self._file.read(length)
         except:
-            self._file.seek(pos)
+            if self._file.seekable():
+                self._file.seek(pos)
             raise StopIteration
         try:
             dict_ = id_to_func[msgid](data)
@@ -39,6 +41,7 @@ class Unpacker:
         return namedtuple(dict_["msg"], dict_.keys())(**dict_)
 
     def feed(self, data: bytes):
+        # Must support random access, if it does not, must be fed externally (e.g. serial)
         pos = self._file.tell()
         self._file.seek(0, 2)
         self._file.write(data)
