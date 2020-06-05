@@ -8,8 +8,8 @@ def _pack(msgid: int, dest: int, source: int, *, param1: int=0, param2: int=0, d
     else:
         return struct.pack("<H4b", msgid, param1, param2, dest, source)
 
-def mot_move_home(dest: int, source: int):
-    return _pack(0x0443, dest, source)
+def mot_move_home(dest: int, source: int, chan_ident: int):
+    return _pack(0x0443, dest, source, param1=chan_ident)
 
 def mot_move_absolute(dest: int, source: int, chan_ident: int, position: Optional[int]=None):
     msgid = 0x0453
