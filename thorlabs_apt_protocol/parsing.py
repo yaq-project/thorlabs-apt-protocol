@@ -68,7 +68,7 @@ def hw_richresponse(data: bytes) -> Dict[str, Any]:
 
 @parser(0x0006)
 def hw_get_info(data: bytes) -> Dict[str, Any]:
-    serial_number, model_number, type_, firmware_version*,_, _, hw_version, mod_state, nchs = struct.unpack_from("<l8cH4B60sHHH", data, HEADER_SIZE)
+    serial_number, model_number, type_, *firmware_version,_, _, hw_version, mod_state, nchs = struct.unpack_from("<l8cH4B60sHHH", data, HEADER_SIZE)
     return {"serial_number": serial_number,
             "model_number": model_number,
             "type": type_,
@@ -169,7 +169,7 @@ def mot_get_moverelparams(data: bytes) -> Dict[str, Any]:
     chan_ident, relative_distance = struct.unpack_from("<Hl", data, HEADER_SIZE)
     return {"chan_ident": chan_ident, "relative_distance": relative_distance}
 
-@parser(0x0447)
+@parser(0x0452)
 def mot_get_moveabsparams(data: bytes) -> Dict[str, Any]:
     chan_ident, absolute_position = struct.unpack_from("<Hl", data, HEADER_SIZE)
     return {"chan_ident": chan_ident, "absolute_position": absolute_position}

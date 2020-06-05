@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Sequence
 import struct
 
 def _pack(msgid: int, dest: int, source: int, *, param1: int=0, param2: int=0, data: Optional[bytes]=None):
@@ -41,7 +41,7 @@ def rack_req_statusbits(dest: int, source: int) -> bytes:
     # - KFS 2020-06-05
     return _pack(0x0226, dest, source)
 
-def rack_set_digoutputs(dest: int, source: int, dig_outs: Sequence[Bool]) -> bytes:
+def rack_set_digoutputs(dest: int, source: int, dig_outs: Sequence[bool]) -> bytes:
     dig_out_param = 0
     bit = 1
     for i in dig_outs:
