@@ -41,7 +41,9 @@ setup(
     include_package_data=True,
     package_data=extra_files,
     name="thorlabs-apt-protocol",
-    packages=find_packages(include=["thorlabs_apt_protocol", "thorlabs_apt_protocol.*"]),
+    packages=find_packages(
+        include=["thorlabs_apt_protocol", "thorlabs_apt_protocol.*"]
+    ),
     url="https://gitlab.com/yaq/thorlabs-apt-protocol",
     version=version,
     zip_safe=False,

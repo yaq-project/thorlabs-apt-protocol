@@ -7,11 +7,11 @@ import warnings
 
 from .parsing import id_to_func
 
-class Unpacker:
 
+class Unpacker:
     def __init__(self, file_like=None):
         if file_like is None:
-            self._file = io.BytesIO() 
+            self._file = io.BytesIO()
         else:
             self._file = file_like
 
@@ -37,7 +37,7 @@ class Unpacker:
         except KeyError:
             warnings.warn(f"Msgid: {hex(msgid)} not recognized")
             dict_ = {"msg": "unknown", "msgid": msgid}
-            
+
         return namedtuple(dict_["msg"], dict_.keys())(**dict_)
 
     def feed(self, data: bytes):
