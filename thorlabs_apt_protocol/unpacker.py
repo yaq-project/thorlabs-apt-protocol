@@ -1,5 +1,6 @@
 __all__ = ["Unpacker"]
 
+import asyncio
 from collections import namedtuple
 import io
 import struct
@@ -39,6 +40,16 @@ class Unpacker:
             dict_ = {"msg": "unknown", "msgid": msgid}
 
         return namedtuple(dict_["msg"], dict_.keys())(**dict_)
+
+    def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        while True:
+            try:
+                return next(self)
+            except StopIteration:
+                await asyncio.sleep(0.001)
 
     def feed(self, data: bytes):
         # Must support random access, if it does not, must be fed externally (e.g. serial)
