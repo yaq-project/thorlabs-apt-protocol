@@ -45,7 +45,7 @@ def _parse_status(data: bytes) -> Dict[str, Any]:
     ret = {
         "chan_ident": chan_ident,
         "position": position,
-        "enc_count": velocity,
+        "enc_count": enc_count,
     }
     ret.update(_parse_status_bits(status_bits))
     return ret
