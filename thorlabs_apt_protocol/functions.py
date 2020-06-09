@@ -13,9 +13,9 @@ def _pack(
 ):
     if data is not None:
         assert param1 == param2 == 0
-        return struct.pack("<HHbb", msgid, len(data), dest | 0x80, source) + data
+        return struct.pack("<HHBB", msgid, len(data), dest | 0x80, source) + data
     else:
-        return struct.pack("<H4b", msgid, param1, param2, dest, source)
+        return struct.pack("<H2b2B", msgid, param1, param2, dest, source)
 
 
 def mod_identify(dest: int, source: int, chan_ident: int) -> bytes:
