@@ -15,31 +15,35 @@ class Unpacker:
             self._file = io.BytesIO()
         else:
             self._file = file_like
+        self.buf = b""
 
     def __iter__(self):
         return self
 
     def __next__(self):
         try:
-            if self._file.seekable():
-                pos = self._file.tell()
-            elif hasatter(self._file, "in_waiting"):
-                assert self._file.in_waiting >= 6
-            header = self._file.read(6)
-            long_form = header[4] & 0x80
-            msgid, length = struct.unpack_from("<HH", header)
-            data = header
-            if long_form:
-                data = header + self._file.read(length)
+            if len(self.buf) < 6:
+                self.buf += self._file.read(6-len(self.buf))
+            long_form = self.buf[4] & 0x80
+            msgid, length = struct.unpack_from("<HH", self.buf)
+            if not long_form:
+                length = 0
+            if long_form and len(self.buf) < length+6:
+                self.buf += self._file.read(length - len(self.buf) + 6)
+            if len(self.buf) < length + 6:
+                raise StopIteration
+            data = self.buf[:length + 6]
         except:
-            if self._file.seekable():
-                self._file.seek(pos)
             raise StopIteration
         try:
+            self.buf = self.buf[len(data):]
             dict_ = id_to_func[msgid](data)
         except KeyError:
             warnings.warn(f"Msgid: {hex(msgid)} not recognized")
-            dict_ = {"msg": "unknown", "msgid": msgid, "source": header[5], "dest": header[4]}
+            dict_ = {"msg": "unknown", "msgid": msgid, "source": data[5], "dest": data[4]}
+        except:
+            print("Unhandled response", data)
+            raise StopIteration
 
         return namedtuple(dict_["msg"], dict_.keys())(**dict_)
 
