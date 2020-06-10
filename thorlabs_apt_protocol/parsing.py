@@ -106,12 +106,12 @@ def hw_get_info(data: bytes) -> Dict[str, Any]:
         hw_version,
         mod_state,
         nchs,
-    ) = struct.unpack_from("<l8cH4B60sHHH", data, HEADER_SIZE)
+    ) = struct.unpack_from("<l8sH4B60sHHH", data, HEADER_SIZE)
     return {
         "serial_number": serial_number,
         "model_number": model_number,
         "type": type_,
-        "firmware_version": firmware_version,
+        "firmware_version": firmware_version[::-1],
         "hw_version": hw_version,
         "mod_state": mod_state,
         "nchs": nchs,
