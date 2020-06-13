@@ -77,7 +77,7 @@ def rack_get_digoutputs(dest: int, source: int) -> bytes:
     return _pack(0x0229, dest, source)
 
 
-def mod_set_digoutputs(dest: int, source: int, chan_ident: int) -> bytes:
+def mod_set_digoutputs(dest: int, source: int, chan_ident: int, dig_outs: Sequence[bool]) -> bytes:
     dig_out_param = 0
     bit = 1
     for i in dig_outs:
@@ -263,7 +263,7 @@ def mot_set_limswitchparams(
         ccw_hardlimit,
         cw_softlimit,
         ccw_softlimit,
-        soft_limit_mode,
+        sort_limit_mode,
     )
     return _pack(0x0423, dest, source, data=data)
 
@@ -351,7 +351,7 @@ def mot_set_dcpidparams(
         proportional,
         integral,
         differential,
-        integral_limits,
+        integral_limit,
         filter_control,
     )
     return _pack(0x04A0, dest, source, data=data)
@@ -380,6 +380,7 @@ def mot_set_potparams(
     vel2: int,
     wnd2: int,
     vel3: int,
+    wnd3: int,
     vel4: int,
 ) -> bytes:
     data = struct.pack(
@@ -829,8 +830,7 @@ def mot_req_sol_cycleparams(dest: int, source: int, chan_ident: int):
 def mot_set_sol_interlockmode(
     dest: int, source: int, chan_ident: int, mode: bool
 ) -> bytes:
-    mode = 1 if mode else 2
-    return _pack(0x04C6, dest, source, param1=chan_ident, param2=mode)
+    return _pack(0x04C6, dest, source, param1=chan_ident, param2=1 if mode else 2)
 
 
 def mot_req_sol_interlockmode(dest: int, source: int, chan_ident: int):
@@ -838,8 +838,7 @@ def mot_req_sol_interlockmode(dest: int, source: int, chan_ident: int):
 
 
 def mot_set_sol_state(dest: int, source: int, chan_ident: int, state: bool) -> bytes:
-    state = 1 if state else 2
-    return _pack(0x04CB, dest, source, param1=chan_ident, param2=state)
+    return _pack(0x04CB, dest, source, param1=chan_ident, param2=1 if state else 2)
 
 
 def mot_req_sol_state(dest: int, source: int, chan_ident: int):

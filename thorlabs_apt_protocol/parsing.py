@@ -134,9 +134,9 @@ def hub_get_bayused(data: bytes) -> Dict[str, Any]:
 @parser(0x0226)
 def rack_get_statusbits(data: bytes) -> Dict[str, Any]:
     # Bitfield
-    status_bits = struct.unpack_from("<L", data, HEADER_SIZE)
+    status_bits, = struct.unpack_from("<L", data, HEADER_SIZE)
     return {
-        "digouts": [
+        "dig_outs": [
             bool(status_bits & 0x1),
             bool(status_bits & 0x2),
             bool(status_bits & 0x3),
@@ -149,7 +149,7 @@ def rack_get_statusbits(data: bytes) -> Dict[str, Any]:
 def rack_get_digoutputs(data: bytes) -> Dict[str, Any]:
     # Bitfield
     return {
-        "digouts": [
+        "dig_outs": [
             bool(data[2] & 0x1),
             bool(data[2] & 0x2),
             bool(data[2] & 0x3),

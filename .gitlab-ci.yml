@@ -1,0 +1,38 @@
+# configure
+image: python:latest
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"  # cache on project level
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+# common to all scripts
+before_script:
+  - python -V
+  - pip install -U virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+  - pip install -U twine
+  - pip install -U pytest
+  - pip install -U mypy
+  - pip install -e .
+
+# test stage
+
+mypy:
+  stage: test
+  script:
+    - mypy thorlabs_apt_protocol
+
+# deploy stage
+twine:
+  stage: deploy
+  script:
+    - python setup.py sdist bdist_wheel
+    - twine upload dist/*
+  artifacts:
+    paths:
+      - dist/*
+  only:
+    - tags
