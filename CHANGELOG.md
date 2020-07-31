@@ -1,3 +1,7 @@
+
+# 25.0.1
+- Switch to flit for packaging
+
 # 25.0.0
 
 Initial release

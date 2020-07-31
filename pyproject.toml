@@ -1,0 +1,30 @@
+[build-system]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.metadata]
+module = "thorlabs_apt_protocol"
+dist-name = "thorlabs-apt-protocol"
+author = "Kyle Sunden"
+author-email = "contact@ksunden.space"
+home-page = "https://gitlab.com/yaq/thorlabs-apt-protocol"
+requires-python = ">=3.6"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Topic :: Scientific/Engineering"
+]    
+description-file = "README.md"
+
+[tool.flit.metadata.urls]
+Source = "https://gitlab.com/yaq/thorlabs-apt-protocol"
+Issues = "https://gitlab.com/yaq/thorlabs-apt-protocol/issues"
+
+[tool.flit.metadata.requires-extra]
+dev = ["black", "pre-commit"]
