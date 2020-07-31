@@ -13,10 +13,10 @@ before_script:
   - pip install -U virtualenv
   - virtualenv venv
   - source venv/bin/activate
-  - pip install -U twine
+  - pip install -U flit
   - pip install -U pytest
   - pip install -U mypy
-  - pip install -e .
+  - pip install .
 
 # test stage
 
@@ -26,11 +26,10 @@ mypy:
     - mypy thorlabs_apt_protocol
 
 # deploy stage
-twine:
+flit:
   stage: deploy
   script:
-    - python setup.py sdist bdist_wheel
-    - twine upload dist/*
+    - flit publish
   artifacts:
     paths:
       - dist/*
