@@ -53,3 +53,12 @@ On Windows, you must toggle a driver setting to make the COM port appear:
 Within Device Manager, right click on the APT device (under USB devices), and go to `Properties`.
 On the `Advanced` tab, check the box that says `Load VCP` (VCP stands for Virtual COM Port).
 Unplug and replug the USB cable to make it load the COM Port.
+
+If the `Advanced` tab does not appear, I was able to use FTDI's [FT_PROG](https://www.ftdichip.com/Support/Utilities.htm#FT_PROG).
+With all other Thorlabs programs not running, click `Devices > Scan for devices`.
+Review over the provided ID information to ensure that you are editing the correct device, FTDI provides serial communication for many different devices from several manufacturers, it is very possible you have multiple devices which show up.
+Under the `Hardware Specific`, uncheck the `Load D2XX` box. 
+This box is a bit of a misnomer, as it really means "Load _only_ D2XX", as when unchecked the D2XX driver (which the Thorlabs provided programs use) is still loaded, but the VCP driver is also loaded.
+Click `Devices > Program`.
+
+Upon reconnecting (unplug and replug USB) the `Advanced` tab should appear as above, but the `Load VCP` driver option may not be checked yet.
