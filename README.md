@@ -35,7 +35,7 @@ Usage with pyserial:
 >>> import thorlabs_apt_protocol as apt
 >>> import serial
 >>> 
->>> port = serial.Serial("/dev/ttyUSB0", 115200, rtscts=True)
+>>> port = serial.Serial("/dev/ttyUSB0", 115200, rtscts=True, timeout=0.1)
 >>> port.rts = True
 >>> port.reset_input_buffer()
 >>> port.reset_output_buffer()
