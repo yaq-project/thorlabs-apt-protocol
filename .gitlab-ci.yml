@@ -16,6 +16,7 @@ before_script:
   - pip install -U flit
   - pip install -U pytest
   - pip install -U mypy
+  - pip install -U flake8
   - pip install .
 
 # test stage
@@ -24,6 +25,11 @@ mypy:
   stage: test
   script:
     - mypy thorlabs_apt_protocol
+
+flake8:
+  stage: test
+  script:
+    - flake8 --max-line-length 99 thorlabs_apt_protocol/ --exclude thorlabs_apt_protocol/__init__.py --extend-ignore E722
 
 # deploy stage
 flit:
