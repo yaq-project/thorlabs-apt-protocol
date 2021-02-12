@@ -254,7 +254,7 @@ def mot_set_limswitchparams(
     ccw_hardlimit: int,
     cw_softlimit: int,
     ccw_softlimit: int,
-    sort_limit_mode: int,
+    soft_limit_mode: int,
 ) -> bytes:
     data = struct.pack(
         "<3HLLH",
@@ -263,7 +263,7 @@ def mot_set_limswitchparams(
         ccw_hardlimit,
         cw_softlimit,
         ccw_softlimit,
-        sort_limit_mode,
+        soft_limit_mode,
     )
     return _pack(0x0423, dest, source, data=data)
 
@@ -740,7 +740,7 @@ def mot_req_kcubeposttrigparams(dest: int, source: int, chan_ident: int):
     return _pack(0x0527, dest, source, param1=chan_ident)
 
 
-def mot_set_kcubestloopparams(
+def mot_set_kcubekstloopparams(
     dest: int,
     source: int,
     chan_ident: int,
@@ -766,7 +766,7 @@ def mot_set_kcubestloopparams(
     return _pack(0x0529, dest, source, data=data)
 
 
-def mot_req_kcubestloopparams(dest: int, source: int, chan_ident: int):
+def mot_req_kcubekstloopparams(dest: int, source: int, chan_ident: int):
     return _pack(0x052A, dest, source, param1=chan_ident)
 
 
