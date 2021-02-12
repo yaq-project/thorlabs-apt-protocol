@@ -643,7 +643,7 @@ def mot_get_kcubeposttrigparams(data: bytes) -> Dict[str, Any]:
 
 
 @parser(0x052B)
-def mot_get_kcubestloopparams(data: bytes) -> Dict[str, Any]:
+def mot_get_kcubekstloopparams(data: bytes) -> Dict[str, Any]:
     (
         chan_ident,
         loop_mode,
