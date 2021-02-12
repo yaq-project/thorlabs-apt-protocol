@@ -172,7 +172,7 @@ def mot_set_jogparams(
         max_velocity,
         stop_mode,
     )
-    return _pack(0x0416, dest, source, param1=chan_ident)
+    return _pack(0x0416, dest, source, data=data)
 
 
 def mot_req_jogparams(dest: int, source: int, chan_ident: int) -> bytes:
@@ -239,7 +239,7 @@ def mot_set_homeparams(
     data = struct.pack(
         "<3Hll", chan_ident, home_dir, limit_switch, home_velocity, offset_distance
     )
-    return _pack(0x0440, dest, source, param1=chan_ident)
+    return _pack(0x0440, dest, source, data=data)
 
 
 def mot_req_homeparams(dest: int, source: int, chan_ident: int) -> bytes:
@@ -312,7 +312,7 @@ def mot_move_stop(dest: int, source: int, chan_ident: int, stop_mode: int) -> by
 
 def mot_set_bowindex(dest: int, source: int, chan_ident: int, bow_index: int) -> bytes:
     data = struct.pack("<HH", chan_ident, bow_index)
-    return _pack(0x04F4, dest, source, param1=chan_ident)
+    return _pack(0x04F4, dest, source, data=data)
 
 
 def mot_req_bowindex(dest: int, source: int, chan_ident: int) -> bytes:
