@@ -23,24 +23,29 @@ class Unpacker:
     def __next__(self):
         try:
             if len(self.buf) < 6:
-                self.buf += self._file.read(6-len(self.buf))
+                self.buf += self._file.read(6 - len(self.buf))
             long_form = self.buf[4] & 0x80
             msgid, length = struct.unpack_from("<HH", self.buf)
             if not long_form:
                 length = 0
-            if long_form and len(self.buf) < length+6:
+            if long_form and len(self.buf) < length + 6:
                 self.buf += self._file.read(length - len(self.buf) + 6)
             if len(self.buf) < length + 6:
                 raise StopIteration
-            data = self.buf[:length + 6]
+            data = self.buf[: length + 6]
         except:
             raise StopIteration
         try:
-            self.buf = self.buf[len(data):]
+            self.buf = self.buf[len(data) :]
             dict_ = id_to_func[msgid](data)
         except KeyError:
             warnings.warn(f"Msgid: {hex(msgid)} not recognized")
-            dict_ = {"msg": "unknown", "msgid": msgid, "source": data[5], "dest": data[4]}
+            dict_ = {
+                "msg": "unknown",
+                "msgid": msgid,
+                "source": data[5],
+                "dest": data[4],
+            }
         except:
             print("Unhandled response", data)
             raise StopIteration
