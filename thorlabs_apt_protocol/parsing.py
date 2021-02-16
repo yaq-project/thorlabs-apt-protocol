@@ -83,7 +83,7 @@ def _parse_pz_status_bits(status_bits: int) -> Dict[str, Any]:
         "max_75V": bool(status_bits & 0x1000),
         "max_100V": bool(status_bits & 0x2000),
         "max_150V": bool(status_bits & 0x4000),
-        "dig_ins": [bool(status_bits & (1<<(21+i)) for i in range(8)],
+        "dig_ins": [bool(status_bits & (1<<(21+i))) for i in range(8)],
         "active": bool(status_bits & 0x20000000),
         "enabled": bool(status_bits & 0x80000000),
     }
@@ -774,7 +774,7 @@ def pz_get_piconsts(data: bytes) -> Dict[str, Any]:
 def pz_get_pzstatusbits(data: bytes) -> Dict[str, Any]:
     chan_ident, status_bits = struct.unpack_from("<HL", data, HEADER_SIZE)
     ret = {"chan_ident": chan_ident}
-    ret.update(_parse_pz_statusbits(status_bits)}
+    ret.update(_parse_pz_status_bits(status_bits))
     return ret
 
 @parser(0x0661)
@@ -783,7 +783,7 @@ def pz_get_pzstatusupdate(data: bytes) -> Dict[str, Any]:
     ret = {
         "chan_ident": chan_ident, "output_voltage": output_voltage, "position": position,
         }
-    ret.update(_parse_pz_statusbits(status_bits))
+    ret.update(_parse_pz_status_bits(status_bits))
     return ret
 
 @parser(0x0692)
@@ -819,6 +819,7 @@ def pz_get_outputlutparams(data: bytes) -> Dict[str, Any]:
     chan_ident, mode, cycle_length, num_cycles, delay_time, pre_cycle_rest, post_cycle_rest, output_trig_start, output_trig_width, trig_rep_cycle = struct.unpack_from("<HHHLLLLHLH", data, HEADER_SIZE)
     return {
         "chan_ident": chan_ident, "mode": mode, "cycle_length": cycle_length, "num_cycles": num_cycles, "delay_time": delay_time, "pre_cycle_rest": pre_cycle_rest, "post_cycle_rest": post_cycle_rest, "output_trig_start": output_trig_start, "output_trig_width": output_trig_width, "trig_rep_cycle": trig_rep_cycle,
+        }
     
 @parser(0x07D3)
 def pz_get_tpz_dispsettings(data: bytes) -> Dict[str, Any]:
