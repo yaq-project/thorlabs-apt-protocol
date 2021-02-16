@@ -72,6 +72,24 @@ def _parse_status_bits(status_bits: int) -> Dict[str, Any]:
         "channel_enabled": bool(status_bits & 0x80000000),
     }
 
+def _parse_pz_status_bits(status_bits: int) -> Dict[str, Any]:
+    # Bitfield
+    return {
+        "connected": bool(status_bits & 0x1),
+        "zeroed": bool(status_bits & 0x10),
+        "zeroing": bool(status_bits & 0x20),
+        "strain_gauge_connected": bool(status_bits & 0x100),
+        "control_mode": bool(status_bits & 0x400),
+        "max_75V": bool(status_bits & 0x1000),
+        "max_100V": bool(status_bits & 0x2000),
+        "max_150V": bool(status_bits & 0x4000),
+        "dig_ins": [bool(status_bits & (1<<(21+i)) for i in range(8)],
+        "active": bool(status_bits & 0x20000000),
+        "enabled": bool(status_bits & 0x80000000),
+    }
+
+
+
 
 @parser(0x0212)
 def mod_get_chanenablestate(data: bytes) -> Dict[str, Any]:
@@ -717,3 +735,182 @@ def mot_get_sol_interlockmode(data: bytes) -> Dict[str, Any]:
 @parser(0x04CD)
 def mot_get_sol_state(data: bytes) -> Dict[str, Any]:
     return {"chan_ident": data[2], "state": data[3] == 0x01}
+
+
+@parser(0x0642)
+def pz_get_positioncontrolmode(data: bytes) -> Dict[str, Any]:
+    return {"chan_ident": data[2], "mode": data[3]}
+
+@parser(0x0645)
+def pz_get_outputvolts(data: bytes) -> Dict[str, Any]:
+    chan_ident, voltage = struct.unpack_from("<Hh", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident, "voltage": voltage,
+        }
+
+
+@parser(0x0648)
+def pz_get_outputpos(data: bytes) -> Dict[str, Any]:
+    chan_ident, position = struct.unpack_from("<HH", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident, "position": position,
+        }
+
+@parser(0x0654)
+def pz_get_inputvoltssrc(data: bytes) -> Dict[str, Any]:
+    chan_ident, volt_src = struct.unpack_from("<HH", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident, "volt_src": volt_src,
+        }
+
+@parser(0x0657)
+def pz_get_piconsts(data: bytes) -> Dict[str, Any]:
+    chan_ident, PropConst, IntConst = struct.unpack_from("<HHH", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident, "PropConst": PropConst, "IntConst": IntConst,
+        }
+
+@parser(0x065C)
+def pz_get_pzstatusbits(data: bytes) -> Dict[str, Any]:
+    chan_ident, status_bits = struct.unpack_from("<HL", data, HEADER_SIZE)
+    ret = {"chan_ident": chan_ident}
+    ret.update(_parse_pz_statusbits(status_bits)}
+    return ret
+
+@parser(0x0661)
+def pz_get_pzstatusupdate(data: bytes) -> Dict[str, Any]:
+    chan_ident, output_voltage, position, status_bits = struct.unpack_from("<HhhL", data, HEADER_SIZE)
+    ret = {
+        "chan_ident": chan_ident, "output_voltage": output_voltage, "position": position,
+        }
+    ret.update(_parse_pz_statusbits(status_bits))
+    return ret
+
+@parser(0x0692)
+def pz_get_ppc_pidconsts(data: bytes) -> Dict[str, Any]:
+    chan_ident, pid_p, pid_i, pid_d, pid_d_filter_cut, pid_d_filter_on = struct.unpack_from("<HHHHHH", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident, "pid_p": pid_p, "pid_i": pid_i, "pid_d": pid_d, "pid_d_filter_cut": pid_d_filter_cut, "pid_d_filter_on": pid_d_filter_on,
+        }
+@parser(0x0695)
+def pz_get_ppc_notchparams(data: bytes) -> Dict[str, Any]:
+    chan_ident, filter_no, filter1_center, filter1_q, notch_filter_1_on, filter2_center, filter2_q, notch_filter_2_on = struct.unpack_from("<HHHHHHHH", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident, "filter_no": filter_no, "filter1_center": filter1_center, "filter1_q": filter1_q, "notch_filter_1_on": notch_filter_1_on, "filter2_center": filter2_center, "filter2_q": filter2_q, "notch_filter_2_on": notch_filter_2_on,
+        }
+
+@parser(0x0698)
+def pz_get_ppc_iosettings(data: bytes) -> Dict[str, Any]:
+    chan_ident, control_src, monitor_out_sig, monitor_out_bandwidth, feedback_src, fp_brightness, _ = struct.unpack_from("<HHHHHHH", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident, "control_src": control_src, "monitor_out_sig": monitor_out_sig, "monitor_out_bandwidth": monitor_out_bandwidth, "feedback_src": feedback_src, "fp_brightness": fp_brightness,
+        }
+
+
+@parser(0x0702)
+def pz_get_outputlut(data: bytes) -> Dict[str, Any]:
+    chan_ident, index, output = struct.unpack_from("<HHh", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident, "index": index, "output": output,
+        }
+
+@parser(0x0705)
+def pz_get_outputlutparams(data: bytes) -> Dict[str, Any]:
+    chan_ident, mode, cycle_length, num_cycles, delay_time, pre_cycle_rest, post_cycle_rest, output_trig_start, output_trig_width, trig_rep_cycle = struct.unpack_from("<HHHLLLLHLH", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident, "mode": mode, "cycle_length": cycle_length, "num_cycles": num_cycles, "delay_time": delay_time, "pre_cycle_rest": pre_cycle_rest, "post_cycle_rest": post_cycle_rest, "output_trig_start": output_trig_start, "output_trig_width": output_trig_width, "trig_rep_cycle": trig_rep_cycle,
+    
+@parser(0x07D3)
+def pz_get_tpz_dispsettings(data: bytes) -> Dict[str, Any]:
+    disp_intensity = struct.unpack_from("<H", data, HEADER_SIZE)
+    return {
+        "disp_intensity": disp_intensity,
+        }
+@parser(0x07D6)
+def pz_get_tpz_iosettings(data: bytes) -> Dict[str, Any]:
+    chan_ident, voltage_limit, hub_analog_input, _, _ = struct.unpack_from("<HHHHH", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident, "voltage_limit": voltage_limit, "hub_analog_input": hub_analog_input,
+        }
+
+
+@parser(0x0651)
+def pz_get_maxtravel(data: bytes) -> Dict[str, Any]:
+    chan_ident, travel = struct.unpack_from("<HH", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident, "travel": travel,
+        }
+
+@parser(0x0672)
+def pz_get_iosettings(data: bytes) -> Dict[str, Any]:
+    chan_ident, amp_current_limit, amp_lowpass_filter, feedback_sig, bnc_trig_or_lv_output = struct.unpack_from("<HHHHH", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident, "amp_current_limit": amp_current_limit, "amp_lowpass_filter": amp_lowpass_filter, "feedback_sig": feedback_sig, "bnc_trig_or_lv_output": bnc_trig_or_lv_output,
+        }
+
+@parser(0x0682)
+def pz_get_outputmaxvolts(data: bytes) -> Dict[str, Any]:
+    chan_ident, voltage, flags = struct.unpack_from("<HHH", data, HEADER_SIZE)
+    ret =  {
+        "chan_ident": chan_ident, "voltage": voltage,
+        }
+    ret.update({
+        "max_75V": bool(flags & 0x2),
+        "max_100V": bool(flags & 0x4),
+        "max_150V": bool(flags & 0x8),
+    })
+    return ret
+
+@parser(0x0685)
+def pz_get_tpz_slewrates(data: bytes) -> Dict[str, Any]:
+    chan_ident, slew_open, slew_closed = struct.unpack_from("<HHH", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident, "slew_open": slew_open, "slew_closed": slew_closed,
+        }
+
+@parser(0x07F2)
+def kpz_get_kcubemmiparams(data: bytes) -> Dict[str, Any]:
+    _, js_mode, js_volt_gearbox, js_volt_step, dir_sense, preset_volt1, preset_volt2, disp_brightness, disp_timeout, disp_dim_level, _, _, _, _ = struct.unpack_from("<HHHLHLLHHH", data, HEADER_SIZE)
+    return {
+        "js_mode": js_mode, "js_volt_gearbox": js_volt_gearbox, "js_volt_step": js_volt_step, "dir_sense": dir_sense, "preset_volt1": preset_volt1, "preset_volt2": preset_volt2, "disp_brightness": disp_brightness, "disp_timeout": disp_timeout, "disp_dim_level": disp_dim_level,
+        }
+
+
+@parser(0x07F5)
+def kpz_get_kcubetrigioconfig(data: bytes) -> Dict[str, Any]:
+    _, trig1_mode, trig1_polarity, trig2_mode, trig2_polarity, _ = struct.unpack_from("<HHHHHH", data, HEADER_SIZE)
+    return {
+        "trig1_mode": trig1_mode, "trig1_polarity": trig1_polarity, "trig2_mode": trig2_mode, "trig2_polarity": trig2_polarity,
+        }
+
+@parser(0x07DC)
+def pz_get_tsg_iosettings(data: bytes) -> Dict[str, Any]:
+    _, hub_analog_output, display_mode, force_calibration, _, _ = struct.unpack_from("<HHHHHH", data, HEADER_SIZE)
+    return {
+        "hub_analog_output": hub_analog_output, "display_mode": display_mode, "force_calibration": force_calibration,
+        }
+
+
+@parser(0x07DF)
+def pz_get_tsg_reading(data: bytes) -> Dict[str, Any]:
+    chan_ident, reading, smoothed = struct.unpack_from("<Hhh", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident, "reading": reading, "smoothed": smoothed,
+        }
+
+
+@parser(0x07F8)
+def ksg_get_kcubemmiparams(data: bytes) -> Dict[str, Any]:
+    chan_ident, disp_intensity, disp_timeout, disp_dim_level = struct.unpack_from("<HHHH", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident, "disp_intensity": disp_intensity, "disp_timeout": disp_timeout, "disp_dim_level": disp_dim_level,
+        }
+
+    
+
+@parser(0x07FB)
+def ksg_get_kcubetrigioconfig(data: bytes) -> Dict[str, Any]:
+    _, trig1_mode, trig1_polarity, trig2_mode, trig2_polarity, lower_lim, upper_lim, smoothing_samples, _ = struct.unpack_from("<HHHHHllHH", data, HEADER_SIZE)
+    return {
+        "trig1_mode": trig1_mode, "trig1_polarity": trig1_polarity, "trig2_mode": trig2_mode, "trig2_polarity": trig2_polarity, "lower_lim": lower_lim, "upper_lim": upper_lim, "smoothing_samples": smoothing_samples,
+        }

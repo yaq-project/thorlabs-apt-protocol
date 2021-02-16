@@ -843,3 +843,206 @@ def mot_set_sol_state(dest: int, source: int, chan_ident: int, state: bool) -> b
 
 def mot_req_sol_state(dest: int, source: int, chan_ident: int):
     return _pack(0x04CC, dest, source, param1=chan_ident)
+
+def pz_set_positioncontrolmode(dest: int, source: int, chan_ident: int, mode: int) --> bytes:
+    return _pack(0x0640, dest, source, param1=chan_ident, param2=mode)
+
+
+def pz_req_positioncontrolmode(dest: int, source: int, chan_ident: int):
+    return _pack(0x0641, dest, source, param1=chan_ident)
+
+def pz_set_outputvolts(dest: int, source: int, chan_ident: int, voltage: int) --> bytes:
+    data = struct.pack("Hh", chan_ident, voltage)
+    return _pack(0x0643, dest, source, data=data)
+
+
+def pz_req_outputvolts(dest: int, source: int, chan_ident: int):
+    return _pack(0x0644, dest, source, param1=chan_ident)
+
+def pz_set_outputpos(dest: int, source: int, chan_ident: int, position: int) --> bytes:
+    data = struct.pack("HH", chan_ident, position)
+    return _pack(0x0646, dest, source, data=data)
+
+
+def pz_req_outputpos(dest: int, source: int, chan_ident: int):
+    return _pack(0x0647, dest, source, param1=chan_ident)
+
+def pz_set_inputvoltssrc(dest: int, source: int, chan_ident: int, volt_src: int) --> bytes:
+    data = struct.pack("HH", chan_ident, volt_src)
+    return _pack(0x0652, dest, source, data=data)
+
+
+def pz_req_inputvoltssrc(dest: int, source: int, chan_ident: int):
+    return _pack(0x0653, dest, source, param1=chan_ident)
+
+def pz_set_piconsts(dest: int, source: int, chan_ident: int, PropConst: int, IntConst: int) --> bytes:
+    data = struct.pack("HHH", chan_ident, PropConst, IntConst)
+    return _pack(0x0655, dest, source, data=data)
+
+
+def pz_req_piconsts(dest: int, source: int, chan_ident: int):
+    return _pack(0x0656, dest, source, param1=chan_ident)
+
+def pz_req_pzstatusbits(dest: int, source: int, chan_ident: int):
+    return _pack(0x065B, dest, source, param1=chan_ident)
+
+
+def pz_req_pzstatusupdate(dest: int, source: int, chan_ident: int):
+    return _pack(0x0660, dest, source, param1=chan_ident)
+
+def pz_ack_pzstatusupdate(dest: int, source: int) -> bytes:
+    return _pack(0x0662, dest, source)
+
+def pz_set_ppc_pidconsts(dest: int, source: int, chan_ident: int, pid_p: int, pid_i: int, pid_d: int, pid_d_filter_cut: int, pid_d_filter_on: int) --> bytes:
+    data = struct.pack("<HHHHHH", chan_ident, pid_p, pid_i, pid_d, pid_d_filter_cut, pid_d_filter_on)
+    return _pack(0x0690, dest, source, data=data)
+
+
+def pz_req_ppc_pidconsts(dest: int, source: int, chan_ident: int):
+    return _pack(0x0691, dest, source, param1=chan_ident)
+
+def pz_set_ppc_notchparams(dest: int, source: int, chan_ident: int, filter_no: int, filter1_center: int, filter1_q: int, notch_filter_1_on: int, filter2_center: int, filter2_q: int, notch_filter_2_on: int) --> bytes:
+    data = struct.pack("<HHHHHHHH", chan_ident, filter_no, filter1_center, filter1_q, notch_filter_1_on, filter2_center, filter2_q, notch_filter_2_on)
+    return _pack(0x0693, dest, source, data=data)
+
+
+def pz_req_ppc_notchparams(dest: int, source: int, chan_ident: int):
+    return _pack(0x0694, dest, source, param1=chan_ident)
+
+def pz_set_ppc_iosettings(dest: int, source: int, chan_ident: int, control_src: int, monitor_out_sig: int, monitor_out_bandwidth: int, feedback_src: int, fp_brightness: int) --> bytes:
+    data = struct.pack("<HHHHHHH", chan_ident, control_src, monitor_out_sig, monitor_out_bandwidth, feedback_src, fp_brightness, 0)
+    return _pack(0x0696, dest, source, data=data)
+
+
+def pz_req_ppc_iosettings(dest: int, source: int, chan_ident: int):
+    return _pack(0x0697, dest, source, param1=chan_ident)
+
+def pz_set_outputlut(dest: int, source: int, chan_ident: int, index: int, output: int) --> bytes:
+    data = struct.pack("<HHh", chan_ident, index, output)
+    return _pack(0x0700, dest, source, data=data)
+
+
+def pz_req_outputlut(dest: int, source: int, chan_ident: int):
+    return _pack(0x0701, dest, source, param1=chan_ident)
+def pz_set_outputlutparams(dest: int, source: int, chan_ident: int, mode: int, cycle_length: int, num_cycles: int, delay_time: int, pre_cycle_rest: int, post_cycle_rest: int, output_trig_start: int, output_trig_width: int, trig_rep_cycle: int) --> bytes:
+    data = struct.pack("<HHHLLLLHLH", chan_ident, mode, cycle_length, num_cycles, delay_time, pre_cycle_rest, post_cycle_rest, output_trig_start, output_trig_width, trig_rep_cycle)
+    return _pack(0x0703, dest, source, data=data)
+
+
+def pz_req_outputlutparams(dest: int, source: int, chan_ident: int):
+    return _pack(0x0704, dest, source, param1=chan_ident)
+
+
+
+def pz_start_lutoutput(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x0706, dest, source, param1=chan_ident)
+
+def pz_stop_lutoutput(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x707 dest, source, param1=chan_ident)
+
+
+
+def pz_set_eepromparams(dest: int, source: int, chan_ident: int, msg_id: int) --> bytes:
+    data = struct.pack("<HH", chan_ident, msg_id)
+    return _pack(0x07D0, dest, source, data=data)
+
+def pz_set_tpz_dispsettings(dest: int, source: int, disp_intensity: int) --> bytes:
+    data = struct.pack("<H", disp_intensity)
+    return _pack(0x07D1, dest, source, data=data)
+
+
+def pz_req_tpz_dispsettings(dest: int, source: int):
+    return _pack(0x07D2, dest, source)
+
+def pz_set_tpz_iosettings(dest: int, source: int, chan_ident: int, voltage_limit: int, hub_analog_input: int) --> bytes:
+    data = struct.pack("<HHHHH", chan_ident, voltage_limit, hub_analog_input, 0, 0)
+    return _pack(0x07D4, dest, source, data=data)
+
+
+def pz_req_tpz_iosettings(dest: int, source: int, chan_ident: int):
+    return _pack(0x07D5, dest, source, param1=chan_ident)
+def pz_set_zero(dest: int, source: int, chan_ident: int) --> bytes:
+    return _pack(0x0658, dest, source, param1=chan_ident)
+def pz_req_maxtravel(dest: int, source: int, chan_ident: int):
+    return _pack(0x0650, dest, source, param1=chan_ident)
+def pz_set_iosettings(dest: int, source: int, chan_ident: int, amp_current_limit: int, amp_lowpass_filter: int, feedback_sig: int, bnc_trig_or_lv_output: int) --> bytes:
+    data = struct.pack("<HHHHH", chan_ident, amp_current_limit, amp_lowpass_filter, feedback_sig, bnc_trig_or_lv_output)
+    return _pack(0x0670, dest, source, data=data)
+
+
+def pz_req_iosettings(dest: int, source: int, chan_ident: int):
+    return _pack(0x0671, dest, source, param1=chan_ident)
+def pz_set_outputmaxvolts(dest: int, source: int, chan_ident: int, voltage: int) --> bytes:
+    data = struct.pack("<HHH", chan_ident, voltage, 0)
+    return _pack(0x0680, dest, source, data=data)
+
+
+def pz_req_outputmaxvolts(dest: int, source: int, chan_ident: int):
+    return _pack(0x0681, dest, source, param1=chan_ident)
+
+def pz_set_tpz_slewrates(dest: int, source: int, chan_ident: int, slew_open: int, slew_closed: int) --> bytes:
+    data = struct.pack("<HHH", chan_ident, slew_open, slew_closed)
+    return _pack(0x0683, dest, source, data=data)
+
+
+def pz_req_tpz_slewrates(dest: int, source: int, chan_ident: int):
+    return _pack(0x0684, dest, source, param1=chan_ident)
+
+def pz_set_lutvaluetype(dest: int, source: int, lut_type: int) --> bytes:
+    return _pack(0x0708, dest, source, param1=lut_type)
+
+def kpz_set_kcubemmiparams(dest: int, source: int, js_mode: int, js_volt_gearbox: int, js_volt_step: int, dir_sense: int, preset_volt1: int, preset_volt2: int, disp_brightness: int, disp_timeout: int, disp_dim_level: int) --> bytes:
+    data = struct.pack("<HHHLHLLHHH", 1, js_mode, js_volt_gearbox, js_volt_step, dir_sense, preset_volt1, preset_volt2, disp_brightness, disp_timeout, disp_dim_level, 0, 0, 0, 0)
+    return _pack(0x07F0, dest, source, data=data)
+
+
+def kpz_req_kcubemmiparams(dest: int, source: int):
+    return _pack(0x07F1, dest, source)
+
+
+def kpz_set_kcubetrigioconfig(dest: int, source: int, trig1_mode: int, trig1_polarity: int, trig2_mode: int, trig2_polarity: int) --> bytes:
+    data = struct.pack("<HHHHHH", 1
+
+def pz_set_tsg_iosettings(dest: int, source: int, hub_analog_output: int, display_mode: int, force_calibration: int) --> bytes:
+    data = struct.pack("<HHHHHH", 1, hub_analog_output, display_mode, force_calibration, 0, 0)
+    return _pack(0x07DA, dest, source, data=data)
+
+
+def pz_req_tsg_iosettings(dest: int, source: int):
+    return _pack(0x07DB, dest, source)
+, trig1_mode, trig1_polarity, trig2_mode, trig2_polarity, 0)
+    return _pack(0x07F3, dest, source, data=data)
+
+
+def kpz_req_kcubetrigioconfig(dest: int, source: int):
+    return _pack(0x07F4, dest, source)
+
+
+
+def pz_set_tsg_reading(dest: int, source: int, chan_ident: int, reading: int, smoothed: int) --> bytes:
+    data = struct.pack("<Hhh", chan_ident, reading, smoothed)
+    return _pack(0x07DD, dest, source, data=data)
+
+
+def pz_req_tsg_reading(dest: int, source: int, chan_ident: int):
+    return _pack(0x07DE, dest, source, param1=chan_ident)
+
+
+
+def ksg_set_kcubemmiparams(dest: int, source: int, chan_ident: int, disp_intensity: int, disp_timeout: int, disp_dim_level: int) --> bytes:
+    data = struct.pack("<HHHH", chan_ident, disp_intensity, disp_timeout, disp_dim_level)
+    return _pack(0x07F6, dest, source, data=data)
+
+
+def ksg_req_kcubemmiparams(dest: int, source: int, chan_ident: int):
+    return _pack(0x07F7, dest, source, param1=chan_ident)
+
+def ksg_set_kcubetrigioconfig(dest: int, source: int, trig1_mode: int, trig1_polarity: int, trig2_mode: int, trig2_polarity: int, lower_lim: int, upper_lim: int, smoothing_samples: int) --> bytes:
+    data = struct.pack("<HHHHHllHH", 1, trig1_mode, trig1_polarity, trig2_mode, trig2_polarity, lower_lim, upper_lim, smoothing_samples, 0)
+    return _pack(0x07F9, dest, source, data=data)
+
+
+def ksg_req_kcubetrigioconfig(dest: int, source: int):
+    return _pack(0x07FA, dest, source)
+
+
