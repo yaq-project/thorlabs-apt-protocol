@@ -29,7 +29,7 @@ mypy:
 flake8:
   stage: test
   script:
-    - flake8 --max-line-length 99 thorlabs_apt_protocol/ --exclude thorlabs_apt_protocol/__init__.py --extend-ignore E722
+    - flake8 --max-line-length 99 thorlabs_apt_protocol/ --exclude thorlabs_apt_protocol/__init__.py --extend-ignore E722,E203
 
 # deploy stage
 flit:
