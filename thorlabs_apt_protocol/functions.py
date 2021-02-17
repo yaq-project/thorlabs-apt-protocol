@@ -1251,3 +1251,241 @@ def ksg_set_kcubetrigioconfig(
 
 def ksg_req_kcubetrigioconfig(dest: int, source: int):
     return _pack(0x07FA, dest, source)
+
+
+def pz_set_ntmode(dest: int, source: int, state: int) -> bytes:
+    return _pack(0x0603, dest, source, param1=state)
+
+
+def pz_req_ntmode(dest: int, source: int):
+    return _pack(0x0604, dest, source)
+
+
+def pz_set_nttrackthreshold(
+    dest: int, source: int, threshold_abs_reading: int
+) -> bytes:
+    data = struct.pack("<f", threshold_abs_reading)
+    return _pack(0x0606, dest, source, data=data)
+
+
+def pz_req_nttrackthreshold(dest: int, source: int):
+    return _pack(0x0607, dest, source)
+
+
+def pz_set_ntcirchomepos(
+    dest: int, source: int, circ_home_pos_a: int, circ_home_pos_b: int
+) -> bytes:
+    data = struct.pack("<HH", circ_home_pos_a, circ_home_pos_b)
+    return _pack(0x0609, dest, source, data=data)
+
+
+def pz_req_ntcirchomepos(dest: int, source: int):
+    return _pack(0x0610, dest, source)
+
+
+def pz_move_ntcirctohomepos(dest: int, source: int):
+    return _pack(0x0612, dest, source)
+
+
+def pz_req_ntcirccentrepos(dest: int, source: int):
+    return _pack(0x0613, dest, source)
+
+
+def pz_set_ntcircparams(
+    dest: int,
+    source: int,
+    circ_dia_mode: int,
+    circ_dia_sw: int,
+    circ_osc_freq: int,
+    abs_pwr_min_circ_dia: int,
+    abs_pwr_max_circ_dia: int,
+    abs_pwr_adjust_type: int,
+) -> bytes:
+    data = struct.pack(
+        "<HHHHHH",
+        circ_dia_mode,
+        circ_dia_sw,
+        circ_osc_freq,
+        abs_pwr_min_circ_dia,
+        abs_pwr_max_circ_dia,
+        abs_pwr_adjust_type,
+    )
+    return _pack(0x0618, dest, source, data=data)
+
+
+def pz_req_ntcircparams(dest: int, source: int):
+    return _pack(0x0619, dest, source)
+
+
+def pz_set_ntcircdia(dest: int, source: int, circ_dia: int) -> bytes:
+    return _pack(0x061A, dest, source, param1=circ_dia)
+
+
+def pz_set_ntcircdialut(dest: int, source: int, lut_val: Sequence[int]) -> bytes:
+    data = struct.pack("<16H", lut_val)
+    return _pack(0x0621, dest, source, data=data)
+
+
+def pz_req_ntcircdialut(dest: int, source: int):
+    return _pack(0x0622, dest, source)
+
+
+def pz_set_ntphasecompparams(
+    dest: int,
+    source: int,
+    phase_comp_mode: int,
+    phase_comp_asw: int,
+    phase_comp_bsw: int,
+) -> bytes:
+    data = struct.pack("<Hhh", phase_comp_mode, phase_comp_asw, phase_comp_bsw)
+    return _pack(0x0626, dest, source, data=data)
+
+
+def pz_req_ntphasecompparams(dest: int, source: int):
+    return _pack(0x0627, dest, source)
+
+
+def pz_set_nttiarangeparams(
+    dest: int,
+    source: int,
+    range_mode: int,
+    range_up_limit: int,
+    range_down_limit: int,
+    settle_sample: int,
+    range_change_type: int,
+    range_sw: int,
+) -> bytes:
+    data = struct.pack(
+        "<HhhhHH",
+        range_mode,
+        range_up_limit,
+        range_down_limit,
+        settle_sample,
+        range_change_type,
+        range_sw,
+    )
+    return _pack(0x0630, dest, source, data=data)
+
+
+def pz_req_nttiarangeparams(dest: int, source: int):
+    return _pack(0x0631, dest, source)
+
+
+def pz_set_ntgainparams(
+    dest: int, source: int, gain_ctrl_mode: int, nt_gain_sw: int
+) -> bytes:
+    data = struct.pack("<Hh", gain_ctrl_mode, nt_gain_sw)
+    return _pack(0x0633, dest, source, data=data)
+
+
+def pz_req_ntgainparams(dest: int, source: int):
+    return _pack(0x0634, dest, source)
+
+
+def pz_set_nttiapfilterparams(dest: int, source: int, param_1: int) -> bytes:
+    data = struct.pack("<5l", param_1, 0, 0, 0, 0)
+    return _pack(0x0636, dest, source, data=data)
+
+
+def pz_req_nttiapfilterparams(dest: int, source: int):
+    return _pack(0x0637, dest, source)
+
+
+def pz_req_nttiareading(dest: int, source: int):
+    return _pack(0x0639, dest, source)
+
+
+def pz_set_ntfeedbacksrc(dest: int, source: int, feedback_src: int) -> bytes:
+    return _pack(0x063B, dest, source, param1=feedback_src)
+
+
+def pz_req_ntfeedbacksrc(dest: int, source: int):
+    return _pack(0x063C, dest, source)
+
+
+def pz_req_ntstatusbits(dest: int, source: int):
+    return _pack(0x063E, dest, source)
+
+
+def pz_req_ntstatusupdate(dest: int, source: int):
+    return _pack(0x0664, dest, source)
+
+
+def pz_ack_ntstatusbits(dest: int, source: int):
+    return _pack(0x0666, dest, source)
+
+
+def kna_set_nttialpfiltercoeefs(dest: int, source: int, param_1: int) -> bytes:
+    data = struct.pack("<5l", param_1, 0, 0, 0, 0)
+    return _pack(0x0687, dest, source, data=data)
+
+
+def kna_req_nttialpfiltercoeefs(dest: int, source: int):
+    return _pack(0x0688, dest, source)
+
+
+def kna_set_kcubemmiparams(
+    dest: int, source: int, wheel_step: int, disp_brightness: int
+) -> bytes:
+    data = struct.pack("<HH6H", wheel_step, disp_brightness, 0, 0, 0, 0, 0, 0)
+    return _pack(0x068A, dest, source, data=data)
+
+
+def kna_req_kcubemmiparams(dest: int, source: int):
+    return _pack(0x068B, dest, source)
+
+
+def kna_set_kcubetrigioconfig(
+    dest: int,
+    source: int,
+    t1_mode: int,
+    t1_polarity: int,
+    t2_mode: int,
+    t2_polarity: int,
+) -> bytes:
+    data = struct.pack(
+        "<10H", t1_mode, t1_polarity, 0, t2_mode, t2_polarity, 0, 0, 0, 0, 0
+    )
+    return _pack(0x068D, dest, source, data=data)
+
+
+def kna_req_kcubetrigioconfig(dest: int, source: int):
+    return _pack(0x068E, dest, source)
+
+
+def kna_req_xyscan(dest: int, source: int):
+    return _pack(0x06A0, dest, source)
+
+
+def kna_stop_xyscan(dest: int, source: int):
+    return _pack(0x06A2, dest, source)
+
+
+def nt_set_eepromparams(dest: int, source: int, chan_ident: int, msg_id: int) -> bytes:
+    data = struct.pack("<HH", chan_ident, msg_id)
+    return _pack(0x07E7, dest, source, data=data)
+
+
+def nt_set_tna_dispsettings(dest: int, source: int, disp_intensity: int) -> bytes:
+    data = struct.pack("<H", disp_intensity)
+    return _pack(0x07E8, dest, source, data=data)
+
+
+def nt_req_tna_dispsettings(dest: int, source: int):
+    return _pack(0x07E9, dest, source)
+
+
+def nt_set_tnaiosettings(
+    dest: int,
+    source: int,
+    lv_out_range: int,
+    lv_out_route: int,
+    hv_out_range: int,
+    sign_io_route: int,
+) -> bytes:
+    data = struct.pack("<HHHH", lv_out_range, lv_out_route, hv_out_range, sign_io_route)
+    return _pack(0x07EB, dest, source, data=data)
+
+
+def nt_req_tnaiosettings(dest: int, source: int):
+    return _pack(0x07EC, dest, source)
