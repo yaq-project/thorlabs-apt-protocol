@@ -90,6 +90,25 @@ def _parse_pz_status_bits(status_bits: int) -> Dict[str, Any]:
     }
 
 
+def _parse_nt_status_bits(status_bits: int) -> Dict[str, Any]:
+    # Bitfield
+    return {
+        "tracking": bool(status_bits & 0x1),
+        "tracking_with_signal": bool(status_bits & 0x2),
+        "tracking_channel_a": bool(status_bits & 0x4),
+        "tracking_channel_b": bool(status_bits & 0x8),
+        "auto_ranging": bool(status_bits & 0x10),
+        "under_read": bool(status_bits & 0x20),
+        "over_read": bool(status_bits & 0x40),
+        "channel_a_connected": bool(status_bits & 0x10000),
+        "channel_b_connected": bool(status_bits & 0x20000),
+        "channel_a_enabled": bool(status_bits & 0x40000),
+        "channel_b_enabled": bool(status_bits & 0x80000),
+        "channel_a_ctrl_mode": bool(status_bits & 0x100000),
+        "channel_b_ctrl_mode": bool(status_bits & 0x200000),
+    }
+
+
 @parser(0x0212)
 def mod_get_chanenablestate(data: bytes) -> Dict[str, Any]:
     return {"chan_ident": data[2], "enabled": data[3] == 0x01}
@@ -1077,4 +1096,223 @@ def ksg_get_kcubetrigioconfig(data: bytes) -> Dict[str, Any]:
         "lower_lim": lower_lim,
         "upper_lim": upper_lim,
         "smoothing_samples": smoothing_samples,
+    }
+
+
+@parser(0x0605)
+def pz_get_ntmode(data: bytes) -> Dict[str, Any]:
+    return {"state": data[2], "mode": data[3]}
+
+
+@parser(0x0608)
+def pz_get_nttrackthreshold(data: bytes) -> Dict[str, Any]:
+    threshold_abs_reading = struct.unpack_from("<f", data, HEADER_SIZE)
+    return {
+        "threshold_abs_reading": threshold_abs_reading,
+    }
+
+
+@parser(0x0611)
+def pz_get_ntcirchomepos(data: bytes) -> Dict[str, Any]:
+    circ_home_pos_a, circ_home_pos_b = struct.unpack_from("<HH", data, HEADER_SIZE)
+    return {
+        "circ_home_pos_a": circ_home_pos_a,
+        "circ_home_pos_b": circ_home_pos_b,
+    }
+
+
+@parser(0x061A)
+def pz_get_ntcircparams(data: bytes) -> Dict[str, Any]:
+    (
+        circ_dia_mode,
+        circ_dia_sw,
+        circ_osc_freq,
+        abs_pwr_min_circ_dia,
+        abs_pwr_max_circ_dia,
+        abs_pwr_adjust_type,
+    ) = struct.unpack_from("<HHHHHH", data, HEADER_SIZE)
+    return {
+        "circ_dia_mode": circ_dia_mode,
+        "circ_dia_sw": circ_dia_sw,
+        "circ_osc_freq": circ_osc_freq,
+        "abs_pwr_min_circ_dia": abs_pwr_min_circ_dia,
+        "abs_pwr_max_circ_dia": abs_pwr_max_circ_dia,
+        "abs_pwr_adjust_type": abs_pwr_adjust_type,
+    }
+
+
+@parser(0x0623)
+def pz_get_ntcircdialut(data: bytes) -> Dict[str, Any]:
+    lut_val = struct.unpack_from("<16H", data, HEADER_SIZE)
+    return {
+        "lut_val": lut_val,
+    }
+
+
+@parser(0x0628)
+def pz_get_ntphasecompparams(data: bytes) -> Dict[str, Any]:
+    phase_comp_mode, phase_comp_asw, phase_comp_bsw = struct.unpack_from(
+        "<Hhh", data, HEADER_SIZE
+    )
+    return {
+        "phase_comp_mode": phase_comp_mode,
+        "phase_comp_asw": phase_comp_asw,
+        "phase_comp_bsw": phase_comp_bsw,
+    }
+
+
+@parser(0x0632)
+def pz_get_nttiarangeparams(data: bytes) -> Dict[str, Any]:
+    (
+        range_mode,
+        range_up_limit,
+        range_down_limit,
+        settle_sample,
+        range_change_type,
+        range_sw,
+    ) = struct.unpack_from("<HhhhHH", data, HEADER_SIZE)
+    return {
+        "range_mode": range_mode,
+        "range_up_limit": range_up_limit,
+        "range_down_limit": range_down_limit,
+        "settle_sample": settle_sample,
+        "range_change_type": range_change_type,
+        "range_sw": range_sw,
+    }
+
+
+@parser(0x0635)
+def pz_get_ntgainparams(data: bytes) -> Dict[str, Any]:
+    gain_ctrl_mode, nt_gain_sw = struct.unpack_from("<Hh", data, HEADER_SIZE)
+    return {
+        "gain_ctrl_mode": gain_ctrl_mode,
+        "nt_gain_sw": nt_gain_sw,
+    }
+
+
+@parser(0x0638)
+def pz_get_nttiapfilterparams(data: bytes) -> Dict[str, Any]:
+    param_1, _, _, _, _ = struct.unpack_from("<5l", data, HEADER_SIZE)
+    return {
+        "param_1": param_1,
+    }
+
+
+@parser(0x063A)
+def pz_get_nttiareading(data: bytes) -> Dict[str, Any]:
+    abs_reading, rel_reading, range, under_over_read = struct.unpack_from(
+        "<fHHH", data, HEADER_SIZE
+    )
+    return {
+        "abs_reading": abs_reading,
+        "rel_reading": rel_reading,
+        "range": range,
+        "under_over_read": under_over_read,
+    }
+
+
+@parser(0x063D)
+def pz_get_ntfeedbacksrc(data: bytes) -> Dict[str, Any]:
+    return {
+        "feedback_src": data[2],
+    }
+
+
+@parser(0x063F)
+def pz_get_ntstatusbits(data: bytes) -> Dict[str, Any]:
+    (status_bits,) = struct.unpack_from("<l", data, HEADER_SIZE)
+    return _parse_nt_status_bits(status_bits)
+
+
+@parser(0x0665)
+def pz_get_ntstatusupdate(data: bytes) -> Dict[str, Any]:
+    (
+        circ_pos_a,
+        circ_pos_b,
+        circ_dia,
+        abs_reading,
+        rel_reading,
+        range,
+        under_over_read,
+        status_bits,
+        nt_gain,
+        phase_comp_a,
+        phase_comp_b,
+    ) = struct.unpack_from("<HHfHHHlhhh", data, HEADER_SIZE)
+    ret = {
+        "circ_pos_a": circ_pos_a,
+        "circ_pos_b": circ_pos_b,
+        "circ_dia": circ_dia,
+        "abs_reading": abs_reading,
+        "rel_reading": rel_reading,
+        "range": range,
+        "under_over_read": under_over_read,
+        "nt_gain": nt_gain,
+        "phase_comp_a": phase_comp_a,
+        "phase_comp_b": phase_comp_b,
+    }
+    ret.update(_parse_nt_status_bits(status_bits))
+    return ret
+
+
+@parser(0x0689)
+def kna_get_nttialpfiltercoeefs(data: bytes) -> Dict[str, Any]:
+    param_1, _, _, _, _ = struct.unpack_from("<5l", data, HEADER_SIZE)
+    return {
+        "param_1": param_1,
+    }
+
+
+@parser(0x068C)
+def kna_get_kcubemmiparams(data: bytes) -> Dict[str, Any]:
+    wheel_step, disp_brightness, _, _, _, _, _, _ = struct.unpack_from(
+        "<HH6H", data, HEADER_SIZE
+    )
+    return {
+        "wheel_step": wheel_step,
+        "disp_brightness": disp_brightness,
+    }
+
+
+@parser(0x068F)
+def kna_get_kcubetrigioconfig(data: bytes) -> Dict[str, Any]:
+    t1_mode, t1_polarity, _, t2_mode, t2_polarity, _, _, _, _, _ = struct.unpack_from(
+        "<10H", data, HEADER_SIZE
+    )
+    return {
+        "t1_mode": t1_mode,
+        "t1_polarity": t1_polarity,
+        "t2_mode": t2_mode,
+        "t2_polarity": t2_polarity,
+    }
+
+
+@parser(0x06A1)
+def kna_get_xyscan(data: bytes) -> Dict[str, Any]:
+    line_number, range, *intensity_map = struct.unpack_from("<HH96B", data, HEADER_SIZE)
+    return {
+        "line_number": line_number,
+        "range": range,
+        "intensity_map": intensity_map,
+    }
+
+
+@parser(0x07EA)
+def nt_get_tna_dispsettings(data: bytes) -> Dict[str, Any]:
+    disp_intensity = struct.unpack_from("<H", data, HEADER_SIZE)
+    return {
+        "disp_intensity": disp_intensity,
+    }
+
+
+@parser(0x07ED)
+def nt_get_tnaiosettings(data: bytes) -> Dict[str, Any]:
+    lv_out_range, lv_out_route, hv_out_range, sign_io_route = struct.unpack_from(
+        "<HHHH", data, HEADER_SIZE
+    )
+    return {
+        "lv_out_range": lv_out_range,
+        "lv_out_route": lv_out_route,
+        "hv_out_range": hv_out_range,
+        "sign_io_route": sign_io_route,
     }
