@@ -108,6 +108,7 @@ def _parse_nt_status_bits(status_bits: int) -> Dict[str, Any]:
         "channel_b_ctrl_mode": bool(status_bits & 0x200000),
     }
 
+
 def _parse_la_status_bits(status_bits: int) -> Dict[str, Any]:
     # Bitfield
     # Note, the adc on the kls101 is ignored for now
@@ -123,8 +124,8 @@ def _parse_la_status_bits(status_bits: int) -> Dict[str, Any]:
         "units": units,
         "dig_ins": [bool(status_bits & 1 << i) for i in range(20, 22)],
         "error": bool(status_bits & 1 << 30),
-
     }
+
 
 def _parse_ld_status_bits(status_bits: int) -> Dict[str, Any]:
     # Bitfield
@@ -148,7 +149,6 @@ def _parse_ld_status_bits(status_bits: int) -> Dict[str, Any]:
         "dig_ins": [bool(status_bits & 1 << i) for i in range(20, 22)],
         "error": bool(status_bits & 1 << 30),
         "high_stability": bool(status_bits & 1 << 31),
-
     }
 
 
@@ -1360,45 +1360,61 @@ def nt_get_tnaiosettings(data: bytes) -> Dict[str, Any]:
         "sign_io_route": sign_io_route,
     }
 
+
 @parser(0x0800)
 def la_get_params(data: bytes) -> Dict[str, Any]:
-    submsgid, = struct.unpack_from("<H", data, HEADER_SIZE)
+    (submsgid,) = struct.unpack_from("<H", data, HEADER_SIZE)
     ret = {"submsgid": submsgid}
     if submsgid == 1:
-        setpoint = struct.unpack_from("<H", data, HEADER_SIZE+2)
+        setpoint = struct.unpack_from("<H", data, HEADER_SIZE + 2)
         ret.update({"setpoint": setpoint})
     elif submsgid == 3:
-        current, power = struct.unpack_from("<HH", data, HEADER_SIZE+2)
+        current, power = struct.unpack_from("<HH", data, HEADER_SIZE + 2)
         ret.update({"current": current, "power": power})
     elif submsgid == 4:
-        current, power, voltage = struct.unpack_from("<Hhh", data, HEADER_SIZE+2)
+        current, power, voltage = struct.unpack_from("<Hhh", data, HEADER_SIZE + 2)
         ret.update({"current": current, "power": power, "voltage": voltage})
     elif submsgid == 5:
-        laser_source, = struct.unpack_from("<H", data, HEADER_SIZE+2)
+        (laser_source,) = struct.unpack_from("<H", data, HEADER_SIZE + 2)
         ret.update({"laser_source": laser_source})
     elif submsgid == 5:
-        laser_source, = struct.unpack_from("<H", data, HEADER_SIZE+2)
+        (laser_source,) = struct.unpack_from("<H", data, HEADER_SIZE + 2)
         ret.update({"laser_source": laser_source})
     elif submsgid == 7:
-        statusbits, = struct.unpack_from("<L", data, HEADER_SIZE+2)
+        (statusbits,) = struct.unpack_from("<L", data, HEADER_SIZE + 2)
         ret.update(_parse_la_status_bits(statusbits))
     elif submsgid == 9:
-        max_current, max_power, wavelength = struct.unpack_from("<HHH", data, HEADER_SIZE+2)
-        ret.update({"max_current": max_current, "max_power": max_power, "wavelength": wavelength})
+        max_current, max_power, wavelength = struct.unpack_from(
+            "<HHH", data, HEADER_SIZE + 2
+        )
+        ret.update(
+            {
+                "max_current": max_current,
+                "max_power": max_power,
+                "wavelength": wavelength,
+            }
+        )
     elif submsgid == 10:
-        max_current, = struct.unpack_from("<h", data, HEADER_SIZE+2)
+        (max_current,) = struct.unpack_from("<h", data, HEADER_SIZE + 2)
         ret.update({"max_current": max_current})
     elif submsgid == 11:
-        intensity, units, _ = struct.unpack_from("<HHH", data, HEADER_SIZE+2)
+        intensity, units, _ = struct.unpack_from("<HHH", data, HEADER_SIZE + 2)
         ret.update({"intensity": intensity, "units": units})
     elif submsgid == 13:
-        calib_factor, polarity, ramp_up = struct.unpack_from("<fHH", data, HEADER_SIZE+2)
-        ret.update({"calib_factor": calib_factor, "polarity": polarity, "ramp_up": ramp_up})
+        calib_factor, polarity, ramp_up = struct.unpack_from(
+            "<fHH", data, HEADER_SIZE + 2
+        )
+        ret.update(
+            {"calib_factor": calib_factor, "polarity": polarity, "ramp_up": ramp_up}
+        )
     elif submsgid == 14:
-        disp_intensity, _, _, _ = struct.unpack_from("<HHHH", data, HEADER_SIZE+2)
+        disp_intensity, _, _, _ = struct.unpack_from("<HHHH", data, HEADER_SIZE + 2)
         ret.update({"disp_intensity": disp_intensity})
     elif submsgid == 17:
-        dig_outs, _, = struct.unpack_from("<HH", data, HEADER_SIZE+2)
+        (
+            dig_outs,
+            _,
+        ) = struct.unpack_from("<HH", data, HEADER_SIZE + 2)
         ret.update({"dig_outs": dig_outs})
 
     return ret
@@ -1413,34 +1429,51 @@ def ld_potrotating(data: bytes):
 def ld_get_maxcurrentdigpot(data: bytes) -> Dict[str, Any]:
     return {
         "max_current": data[2],
-        }
+    }
 
 
-    
 @parser(0x0821)
 def la_get_statusupdate(data: bytes) -> Dict[str, Any]:
-    laser_current, laser_power, statusbits = struct.unpack_from("<HHL", data, HEADER_SIZE)
-    ret =  {
-        "laser_current": laser_current, "laser_power": laser_power,
-        }
+    laser_current, laser_power, statusbits = struct.unpack_from(
+        "<HHL", data, HEADER_SIZE
+    )
+    ret = {
+        "laser_current": laser_current,
+        "laser_power": laser_power,
+    }
 
-    ret.update(_parse_la_status_bits(statusbits)
+    ret.update(_parse_la_status_bits(statusbits))
     return ret
 
 
 @parser(0x0826)
 def ld_get_statusupdate(data: bytes) -> Dict[str, Any]:
-    laser_current, photo_current, laser_voltage, _, statusbits = struct.unpack_from("<hHhLL", data, HEADER_SIZE)
-    ret =  {
-        "laser_current": laser_current, "photo_current": photo_current, "laser_voltage": laser_voltage,
-        }
+    laser_current, photo_current, laser_voltage, _, statusbits = struct.unpack_from(
+        "<hHhLL", data, HEADER_SIZE
+    )
+    ret = {
+        "laser_current": laser_current,
+        "photo_current": photo_current,
+        "laser_voltage": laser_voltage,
+    }
     ret.update(_parse_ld_status_bits(statusbits))
     return ret
 
+
 @parser(0x082C)
 def la_get_kcubetrigconfig(data: bytes) -> Dict[str, Any]:
-    _, trig1_mode, trig1_polarity, _, trig2_mode, trig2_polarity, _ = struct.unpack_from("<HHHHHHH", data, HEADER_SIZE)
+    (
+        _,
+        trig1_mode,
+        trig1_polarity,
+        _,
+        trig2_mode,
+        trig2_polarity,
+        _,
+    ) = struct.unpack_from("<HHHHHHH", data, HEADER_SIZE)
     return {
-        "trig1_mode": trig1_mode, "trig1_polarity": trig1_polarity, "trig2_mode": trig2_mode, "trig2_polarity": trig2_polarity,
-        }
-
+        "trig1_mode": trig1_mode,
+        "trig1_polarity": trig1_polarity,
+        "trig2_mode": trig2_mode,
+        "trig2_polarity": trig2_polarity,
+    }
