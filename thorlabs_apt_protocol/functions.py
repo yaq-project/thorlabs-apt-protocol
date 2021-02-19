@@ -1489,3 +1489,156 @@ def nt_set_tnaiosettings(
 
 def nt_req_tnaiosettings(dest: int, source: int):
     return _pack(0x07EC, dest, source)
+
+
+def la_set_power_setpoint(dest: int, source: int, setpoint: int) -> bytes:
+    data = struct.pack("<HH", 1, setpoint)
+    return _pack(0x0800, dest, source, data=data)
+
+
+def la_req_power_setpoint(dest: int, source: int):
+    return _pack(0x0801, dest, source, param1=1)
+
+
+def la_req_laser_current_and_power(dest: int, source: int):
+    return _pack(0x0801, dest, source, param1=3)
+
+
+def la_req_laser_current_and_power_tld110(dest: int, source: int):
+    return _pack(0x0801, dest, source, param1=4)
+
+
+def la_set_laser_control_source(dest: int, source: int, laser_source: int) -> bytes:
+    data = struct.pack("<HH", 5, laser_source)
+    return _pack(0x0800, dest, source, data=data)
+
+
+def la_req_laser_control_source(dest: int, source: int):
+    return _pack(0x0801, dest, source, param1=5)
+
+
+def la_req_lastatusbits(dest: int, source: int):
+    return _pack(0x0801, dest, source, param1=7)
+
+
+def la_req_max_limits(dest: int, source: int):
+    return _pack(0x0801, dest, source, param1=9)
+
+
+def la_req_max_diode_current(dest: int, source: int):
+    return _pack(0x0801, dest, source, param1=10)
+
+
+def la_set_display_settings(
+    dest: int, source: int, intensity: int, units: int
+) -> bytes:
+    data = struct.pack("<HHHH", 11, intensity, units, 0)
+    return _pack(0x0800, dest, source, data=data)
+
+
+def la_req_display_settings(dest: int, source: int):
+    return _pack(0x0801, dest, source, param1=11)
+
+
+def la_set_misc_params(
+    dest: int, source: int, calib_factor: float, polarity: int, ramp_up: int
+) -> bytes:
+    data = struct.pack("<HfHH", 13, calib_factor, polarity, ramp_up)
+    return _pack(0x0800, dest, source, data=data)
+
+
+def la_req_misc_params(dest: int, source: int):
+    return _pack(0x0801, dest, source, param1=13)
+
+
+def la_set_mmi_params(dest: int, source: int, disp_intensity: int) -> bytes:
+    data = struct.pack("<HHHHH", 14, disp_intensity, 0, 0, 0, 0)
+    return _pack(0x0800, dest, source, data=data)
+
+
+def la_req_mmi_params(dest: int, source: int):
+    return _pack(0x0801, dest, source, param1=14)
+
+
+def la_set_klddigoutputs(dest: int, source: int, dig_outputs: int) -> bytes:
+    data = struct.pack("<HHH", 14, dig_outputs, 0)
+    return _pack(0x0800, dest, source, data=data)
+
+
+def la_req_klddigoutputs(dest: int, source: int):
+    return _pack(0x0801, dest, source, param1=17)
+
+
+def la_set_eepromparams(dest: int, source: int, msgid: int) -> bytes:
+    data = struct.pack("<H", msgid)
+    return _pack(0x0810, dest, source, data=data)
+
+
+def la_enableoutput(dest: int, source: int):
+    return _pack(0x0811, dest, source)
+
+
+def la_disableoutput(dest: int, source: int):
+    return _pack(0x0812, dest, source)
+
+
+def la_openloop(dest: int, source: int):
+    return _pack(0x0813, dest, source)
+
+
+def la_closedloop(dest: int, source: int):
+    return _pack(0x0814, dest, source)
+
+
+def ld_maxcurrentadjust(
+    dest: int, source: int, enable_adjustment: int, allow_with_diode: int
+):
+    return _pack(
+        0x0816, dest, source, param1=enable_adjustment, param2=allow_with_diode
+    )
+
+
+def ld_set_maxcurrentdigpot(dest: int, source: int, max_current: int) -> bytes:
+    return _pack(0x0817, dest, source, param1=max_current)
+
+
+def ld_req_maxcurrentdigpot(dest: int, source: int):
+    return _pack(0x0818, dest, source)
+
+
+def ld_findtiaagain(dest: int, source: int):
+    return _pack(0x081A, dest, source)
+
+
+def ld_tiagainadjust(dest: int, source: int, enable: int) -> bytes:
+    return _pack(0x081B, dest, source, param1=enable)
+
+
+def la_req_statusupdate(dest: int, source: int):
+    return _pack(0x0820, dest, source)
+
+
+def la_ack_statusupdate(dest: int, source: int):
+    return _pack(0x0822, dest, source)
+
+
+def ld_ack_statusupdate(dest: int, source: int):
+    return _pack(0x0827, dest, source)
+
+
+def la_set_kcubetrigconfig(
+    dest: int,
+    source: int,
+    trig1_mode: int,
+    trig1_polarity: int,
+    trig2_mode: int,
+    trig2_polarity: int,
+) -> bytes:
+    data = struct.pack(
+        "<HHHHHHH", 1, trig1_mode, trig1_polarity, 0, trig2_mode, trig2_polarity, 0
+    )
+    return _pack(0x082A, dest, source, data=data)
+
+
+def la_req_kcubetrigconfig(dest: int, source: int):
+    return _pack(0x082B, dest, source)
