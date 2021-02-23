@@ -1806,3 +1806,67 @@ def quad_ack_statusupdate(dest: int, source: int):
 def quad_set_eepromparams(dest: int, source: int, msgid: int) -> bytes:
     data = struct.pack("<H", msgid)
     return _pack(0x0875, dest, source, data=data)
+
+
+def tec_set_tempsetpoint(dest: int, source: int, temp_set: int) -> bytes:
+    data = struct.pack("<HH", 1, temp_set)
+    return _pack(0x0840, dest, source, data=data)
+
+
+def tec_req_tempsetpoint(dest: int, source: int):
+    return _pack(0x0841, dest, source, param1=1)
+
+
+def tec_req_readings(dest: int, source: int):
+    return _pack(0x0841, dest, source, param1=3)
+
+
+def tec_set_iosettings(
+    dest: int, source: int, sensor: int, current_limit: int
+) -> bytes:
+    data = struct.pack("<HHh", 5, sensor, current_limit)
+    return _pack(0x0840, dest, source, data=data)
+
+
+def tec_req_iosettings(dest: int, source: int):
+    return _pack(0x0841, dest, source, param1=5)
+
+
+def tec_req_statusbits(dest: int, source: int):
+    return _pack(0x0841, dest, source, param1=7)
+
+
+def tec_set_loopparams(dest: int, source: int, p: int, i: int, d: int) -> bytes:
+    data = struct.pack("<HHHH", 9, p, i, d)
+    return _pack(0x0840, dest, source, data=data)
+
+
+def tec_req_loopparams(dest: int, source: int):
+    return _pack(0x0841, dest, source, param1=9)
+
+
+def tec_set_disp_settings(
+    dest: int, source: int, disp_intensity: int, disp_mode: int
+) -> bytes:
+    data = struct.pack("<HHHH", 0xB, disp_intensity, disp_mode, 0)
+    return _pack(0x0840, dest, source, data=data)
+
+
+def tec_req_disp_settings(dest: int, source: int):
+    return _pack(0x0841, dest, source, param1=0xB)
+
+
+def tec_set_eepromparams(
+    dest: int,
+    source: int,
+) -> bytes:
+    data = struct.pack("<H", 0)
+    return _pack(0x0850, dest, source, data=data)
+
+
+def tec_req_statusupdate(dest: int, source: int):
+    return _pack(0x0860, dest, source)
+
+
+def tec_ack_statusupdate(dest: int, source: int):
+    return _pack(0x0862, dest, source)
