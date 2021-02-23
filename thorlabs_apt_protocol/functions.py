@@ -1642,3 +1642,167 @@ def la_set_kcubetrigconfig(
 
 def la_req_kcubetrigconfig(dest: int, source: int):
     return _pack(0x082B, dest, source)
+
+
+def quad_set_loopparams(
+    dest: int, source: int, pGain: int, iGain: int, dGain: int
+) -> bytes:
+    data = struct.pack("<HHHH", 1, pGain, iGain, dGain)
+    return _pack(0x0870, dest, source, data=data)
+
+
+def quad_req_loopparams(dest: int, source: int):
+    return _pack(0x0871, dest, source, param1=1)
+
+
+def quad_req_readings(dest: int, source: int):
+    return _pack(0x0871, dest, source, param1=3)
+
+
+def quad_set_posdemandparams(
+    dest: int,
+    source: int,
+    x_pos_dem_min: int,
+    y_pos_dem_min: int,
+    x_pos_dem_max: int,
+    y_pos_dem_max: int,
+    lv_out_route: int,
+    ol_pos_dem: int,
+    x_pos_fb_sense: int,
+    y_pos_fb_sense: int,
+) -> bytes:
+    data = struct.pack(
+        "<HhhhhHHhh",
+        5,
+        x_pos_dem_min,
+        y_pos_dem_min,
+        x_pos_dem_max,
+        y_pos_dem_max,
+        lv_out_route,
+        ol_pos_dem,
+        x_pos_fb_sense,
+        y_pos_fb_sense,
+    )
+    return _pack(0x0870, dest, source, data=data)
+
+
+def quad_req_posdemandparams(dest: int, source: int):
+    return _pack(0x0871, dest, source, param1=5)
+
+
+def quad_set_opermode(dest: int, source: int, mode: int) -> bytes:
+    data = struct.pack("<HH", 7, mode)
+    return _pack(0x0870, dest, source, data=data)
+
+
+def quad_req_opermode(dest: int, source: int):
+    return _pack(0x0871, dest, source, param1=7)
+
+
+def quad_set_dispsettings(
+    dest: int, source: int, disp_intensity: int, disp_mode: int, disp_dim_timeout: int
+) -> bytes:
+    data = struct.pack("<HHHH", 8, disp_intensity, disp_mode, disp_dim_timeout)
+    return _pack(0x0870, dest, source, data=data)
+
+
+def quad_req_dispsettings(dest: int, source: int):
+    return _pack(0x0871, dest, source, param1=8)
+
+
+def quad_set_positionoutputs(dest: int, source: int, x_pos: int, y_pos: int) -> bytes:
+    data = struct.pack("<Hhh", 0xD, x_pos, y_pos)
+    return _pack(0x0870, dest, source, data=data)
+
+
+def quad_req_positionoutputs(dest: int, source: int):
+    return _pack(0x0871, dest, source, param1=0xD)
+
+
+def quad_set_loopparams2(
+    dest: int,
+    source: int,
+    p: int,
+    i: int,
+    d: int,
+    low_pass_cutoff: int,
+    notch_center: int,
+    filter_q: int,
+    notch_filter_on: int,
+    deriv_filter_on: int,
+) -> bytes:
+    data = struct.pack(
+        "<HffffffHH",
+        0xE,
+        p,
+        i,
+        d,
+        low_pass_cutoff,
+        notch_center,
+        filter_q,
+        notch_filter_on,
+        deriv_filter_on,
+    )
+    return _pack(0x0870, dest, source, data=data)
+
+
+def quad_req_loopparams2(dest: int, source: int):
+    return _pack(0x0871, dest, source, param1=0xE)
+
+
+def quad_set_kpatrigioconfig(
+    dest: int,
+    source: int,
+    trig1_mode: int,
+    trig1_polarity: int,
+    trig1_sum_min: int,
+    trig1_sum_max: int,
+    trig1_diff_threshold: int,
+    trig2_mode: int,
+    trig2_polarity: int,
+    trig2_sum_min: int,
+    trig2_sum_max: int,
+    trig2_diff_threshold: int,
+) -> bytes:
+    data = struct.pack(
+        "<12H",
+        0xF,
+        trig1_mode,
+        trig1_polarity,
+        trig1_sum_min,
+        trig1_sum_max,
+        trig1_diff_threshold,
+        trig2_mode,
+        trig2_polarity,
+        trig2_sum_min,
+        trig2_sum_max,
+        trig2_diff_threshold,
+        0,
+    )
+    return _pack(0x0870, dest, source, data=data)
+
+
+def quad_req_kpatrigioconfig(dest: int, source: int):
+    return _pack(0x0871, dest, source, param1=0xF)
+
+
+def quad_set_kpadigoutputs(dest: int, source: int, dig_outs: int) -> bytes:
+    data = struct.pack("<HHH", 0xA, dig_outs, 0)
+    return _pack(0x0870, dest, source, data=data)
+
+
+def quad_req_kpadigoutputs(dest: int, source: int):
+    return _pack(0x0871, dest, source, param1=0xA)
+
+
+def quad_req_statusupdate(dest: int, source: int):
+    return _pack(0x0880, dest, source)
+
+
+def quad_ack_statusupdate(dest: int, source: int):
+    return _pack(0x0882, dest, source)
+
+
+def quad_set_eepromparams(dest: int, source: int, msgid: int) -> bytes:
+    data = struct.pack("<H", msgid)
+    return _pack(0x0875, dest, source, data=data)
