@@ -152,6 +152,15 @@ def _parse_ld_status_bits(status_bits: int) -> Dict[str, Any]:
     }
 
 
+def _parse_quad_status_bits(status_bits: int) -> Dict[str, Any]:
+    # Bitfield
+    return {
+        "position_monitoring": bool(status_bits & 0x1),
+        "open_loop": bool(status_bits & 0x2),
+        "closed_loop": bool(status_bits & 0x4),
+    }
+
+
 @parser(0x0212)
 def mod_get_chanenablestate(data: bytes) -> Dict[str, Any]:
     return {"chan_ident": data[2], "enabled": data[3] == 0x01}
@@ -1477,3 +1486,156 @@ def la_get_kcubetrigconfig(data: bytes) -> Dict[str, Any]:
         "trig2_mode": trig2_mode,
         "trig2_polarity": trig2_polarity,
     }
+
+
+@parser(0x0870)
+def quad_get_params(data: bytes) -> Dict[str, Any]:
+    (submsgid,) = struct.unpack_from("<H", data, HEADER_SIZE)
+    ret = {"submsgid": submsgid}
+    if submsgid == 1:
+        PGain, IGain, DGain = struct.unpack_from("<HHH", data, HEADER_SIZE)
+        ret.update(
+            {
+                "PGain": PGain,
+                "IGain": IGain,
+                "DGain": DGain,
+            }
+        )
+    elif submsgid == 3:
+        x_diff, y_diff, sum, x_pos, y_pos = struct.unpack_from(
+            "<hhHhh", data, HEADER_SIZE
+        )
+        ret.update(
+            {
+                "x_diff": x_diff,
+                "y_diff": y_diff,
+                "sum": sum,
+                "x_pos": x_pos,
+                "y_pos": y_pos,
+            }
+        )
+    elif submsgid == 5:
+        (
+            x_pos_dem_min,
+            y_pos_dem_min,
+            x_pos_dem_max,
+            y_pos_dem_max,
+            lv_out_route,
+            ol_pos_dem,
+            x_pos_fb_sense,
+            y_pos_fb_sense,
+        ) = struct.unpack_from("<hhhhHHhh", data, HEADER_SIZE)
+        ret.update(
+            {
+                "x_pos_dem_min": x_pos_dem_min,
+                "y_pos_dem_min": y_pos_dem_min,
+                "x_pos_dem_max": x_pos_dem_max,
+                "y_pos_dem_max": y_pos_dem_max,
+                "lv_out_route": lv_out_route,
+                "ol_pos_dem": ol_pos_dem,
+                "x_pos_fb_sense": x_pos_fb_sense,
+                "y_pos_fb_sense": y_pos_fb_sense,
+            }
+        )
+    elif submsgid == 7:
+        (mode,) = struct.unpack_from("<H", data, HEADER_SIZE)
+        ret.update(
+            {
+                "mode": mode,
+            }
+        )
+    elif submsgid == 8:
+        disp_intensity, disp_mode, disp_dim_timeout = struct.unpack_from(
+            "<HHH", data, HEADER_SIZE
+        )
+        ret.update(
+            {
+                "disp_intensity": disp_intensity,
+                "disp_mode": disp_mode,
+                "disp_dim_timeout": disp_dim_timeout,
+            }
+        )
+    elif submsgid == 0xD:
+        x_pos, y_pos = struct.unpack_from("<hh", data, HEADER_SIZE)
+        ret.update(
+            {
+                "x_pos": x_pos,
+                "y_pos": y_pos,
+            }
+        )
+    elif submsgid == 0xE:
+        (
+            p,
+            i,
+            d,
+            low_pass_cutoff,
+            notch_center,
+            filter_q,
+            notch_filter_on,
+            deriv_filter_on,
+        ) = struct.unpack_from("<ffffffHH", data, HEADER_SIZE)
+        ret.update(
+            {
+                "p": p,
+                "i": i,
+                "d": d,
+                "low_pass_cutoff": low_pass_cutoff,
+                "notch_center": notch_center,
+                "filter_q": filter_q,
+                "notch_filter_on": notch_filter_on,
+                "deriv_filter_on": deriv_filter_on,
+            }
+        )
+    elif submsgid == 0xF:
+        (
+            trig1_mode,
+            trig1_polarity,
+            trig1_sum_min,
+            trig1_sum_max,
+            trig1_diff_threshold,
+            trig2_mode,
+            trig2_polarity,
+            trig2_sum_min,
+            trig2_sum_max,
+            trig2_diff_threshold,
+            _,
+        ) = struct.unpack_from("<11H", data, HEADER_SIZE)
+        ret.update(
+            {
+                "trig1_mode": trig1_mode,
+                "trig1_polarity": trig1_polarity,
+                "trig1_sum_min": trig1_sum_min,
+                "trig1_sum_max": trig1_sum_max,
+                "trig1_diff_threshold": trig1_diff_threshold,
+                "trig2_mode": trig2_mode,
+                "trig2_polarity": trig2_polarity,
+                "trig2_sum_min": trig2_sum_min,
+                "trig2_sum_max": trig2_sum_max,
+                "trig2_diff_threshold": trig2_diff_threshold,
+            }
+        )
+    elif submsgid == 0xA:
+        dig_outs, _ = struct.unpack_from("<HH", data, HEADER_SIZE)
+        ret.update(
+            {
+                "dig_outs": dig_outs,
+            }
+        )
+
+    return ret
+
+
+@parser(0x0881)
+def quad_get_statusupdate(data: bytes) -> Dict[str, Any]:
+    x_diff, y_diff, sum, x_pos, y_pos, statusbits = struct.unpack_from(
+        "<hhHhhL", data, HEADER_SIZE
+    )
+    ret = {
+        "x_diff": x_diff,
+        "y_diff": y_diff,
+        "sum": sum,
+        "x_pos": x_pos,
+        "y_pos": y_pos,
+    }
+    ret.update(_parse_quad_status_bits(statusbits))
+    return ret
