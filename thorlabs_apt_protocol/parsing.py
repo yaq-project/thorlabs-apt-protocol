@@ -161,6 +161,19 @@ def _parse_quad_status_bits(status_bits: int) -> Dict[str, Any]:
     }
 
 
+def _parse_tec_status_bits(status_bits: int) -> Dict[str, Any]:
+    # Bitfield
+    display_mode = "temp_actual" if bool(status_bits & 0x10) else ""
+    display_mode = "temp_set" if bool(status_bits & 0x20) else ""
+    display_mode = "temp_delta" if bool(status_bits & 0x40) else ""
+    display_mode = "current" if bool(status_bits & 0x80) else ""
+    return {
+        "output_enabled": bool(status_bits & 0x1),
+        "display_mode": display_mode,
+        "error": bool(status_bits & (0x1 << 30)),
+    }
+
+
 @parser(0x0212)
 def mod_get_chanenablestate(data: bytes) -> Dict[str, Any]:
     return {"chan_ident": data[2], "enabled": data[3] == 0x01}
@@ -1638,4 +1651,62 @@ def quad_get_statusupdate(data: bytes) -> Dict[str, Any]:
         "y_pos": y_pos,
     }
     ret.update(_parse_quad_status_bits(statusbits))
+    return ret
+
+
+@parser(0x0842)
+def tec_get_params(data: bytes) -> Dict[str, Any]:
+    (submsgid,) = struct.unpack_from("<H", data, HEADER_SIZE)
+    ret = {"submsgid": submsgid}
+    if submsgid == 1:
+        (temp_set,) = struct.unpack_from("<H", data, HEADER_SIZE)
+        ret.update({"temp_set": temp_set})
+    elif submsgid == 3:
+        current, temp_actual, temp_set = struct.unpack_from("<hhH", data, HEADER_SIZE)
+        ret.update(
+            {
+                "current": current,
+                "temp_actual": temp_actual,
+                "temp_set": temp_set,
+            }
+        )
+    elif submsgid == 5:
+        sensor, current_limit = struct.unpack_from("<Hh", data, HEADER_SIZE)
+        ret.update(
+            {
+                "sensor": sensor,
+                "current_limit": current_limit,
+            }
+        )
+    elif submsgid == 7:
+        (statusbits,) = struct.unpack_from("<L", data, HEADER_SIZE)
+        ret.update(_parse_tec_status_bits(statusbits))
+    elif submsgid == 9:
+        p, i, d = struct.unpack_from("<HHH", data, HEADER_SIZE)
+        ret.update(
+            {
+                "p": p,
+                "i": i,
+                "d": d,
+            }
+        )
+    elif submsgid == 0xB:
+        disp_intensity, disp_mode, _ = struct.unpack_from("<HHH", data, HEADER_SIZE)
+        ret.update(
+            {
+                "disp_intensity": disp_intensity,
+                "disp_mode": disp_mode,
+            }
+        )
+
+    return ret
+
+
+@parser(0x0861)
+def tec_get_statusupdate(data: bytes) -> Dict[str, Any]:
+    current, temp_actual, temp_set, statusbits = struct.unpack_from(
+        "<hhHL", data, HEADER_SIZE
+    )
+    ret = {"current": current, "temp_actual": temp_actual, "temp_set": temp_set}
+    ret.update(_parse_tec_status_bits(statusbits))
     return ret
