@@ -1,6 +1,7 @@
 # Unreleased
 
 - Fix 3 functions that did not properly encode the parameter data
+- Add missing messages related to piezo controllers, laser control, quad, etc
 
 # 25.0.1
 
