@@ -174,6 +174,27 @@ def _parse_tec_status_bits(status_bits: int) -> Dict[str, Any]:
     }
 
 
+def _parse_pzmot_status_bits(status_bits: int) -> Dict[str, Any]:
+    # Bitfield
+    # Tracking and interlock are the same bit?
+    return {
+        "forward_limit_switch": bool(status_bits & 0x1),
+        "reverse_limit_switch": bool(status_bits & 0x2),
+        "moving_forward": bool(status_bits & 0x10),
+        "moving_reverse": bool(status_bits & 0x20),
+        "jogging_forward": bool(status_bits & 0x40),
+        "jogging_reverse": bool(status_bits & 0x80),
+        "motor_connected": bool(status_bits & 0x100),
+        "homing": bool(status_bits & 0x200),
+        "homed": bool(status_bits & 0x400),
+        "dig_in1": bool(status_bits & 0x100000),
+        "power_ok": bool(status_bits & 0x10000000),
+        "active": bool(status_bits & 0x20000000),
+        "error": bool(status_bits & 0x40000000),
+        "channel_enabled": bool(status_bits & 0x80000000),
+    }
+
+
 @parser(0x0212)
 def mod_get_chanenablestate(data: bytes) -> Dict[str, Any]:
     return {"chan_ident": data[2], "enabled": data[3] == 0x01}
@@ -1709,4 +1730,239 @@ def tec_get_statusupdate(data: bytes) -> Dict[str, Any]:
     )
     ret = {"current": current, "temp_actual": temp_actual, "temp_set": temp_set}
     ret.update(_parse_tec_status_bits(statusbits))
+    return ret
+
+
+@parser(0x08C2)
+def pzmot_get_params(data: bytes) -> Dict[str, Any]:
+    (submsgid,) = struct.unpack_from("<H", data, HEADER_SIZE)
+    ret = {"submsgid": submsgid}
+    if submsgid == 5:
+        chan_ident, position, _ = struct.unpack_from("<Hll", data, HEADER_SIZE)
+        ret.update(
+            {
+                "chan_ident": chan_ident,
+                "position": position,
+            }
+        )
+    elif submsgid == 7:
+        chan_ident, max_voltage, step_rate, step_accn = struct.unpack_from(
+            "<HHll", data, HEADER_SIZE
+        )
+        ret.update(
+            {
+                "chan_ident": chan_ident,
+                "max_voltage": max_voltage,
+                "step_rate": step_rate,
+                "step_accn": step_accn,
+            }
+        )
+    elif submsgid == 9:
+        (
+            chan_ident,
+            jog_mode,
+            jog_step_size,
+            jog_step_rate,
+            jog_step_accn,
+        ) = struct.unpack_from("<HHlll", data, HEADER_SIZE)
+        ret.update(
+            {
+                "chan_ident": chan_ident,
+                "jog_mode": jog_mode,
+                "jog_step_size": jog_step_size,
+                "jog_step_rate": jog_step_rate,
+                "jog_step_accn": jog_step_accn,
+            }
+        )
+    elif submsgid == 0x11:
+        chan_ident, max_step_rate = struct.unpack_from("<Hl", data, HEADER_SIZE)
+        ret.update(
+            {
+                "chan_ident": chan_ident,
+                "max_step_rate": max_step_rate,
+            }
+        )
+    elif submsgid == 0x13:
+        chan_ident, mode, position1, position2, _, _ = struct.unpack_from(
+            "<HHllHH", data, HEADER_SIZE
+        )
+        ret.update(
+            {
+                "chan_ident": chan_ident,
+                "mode": mode,
+                "position1": position1,
+                "position2": position2,
+            }
+        )
+    elif submsgid == 0xB:
+        chan_ident, fwd_hard_limit, rev_hard_limit, _ = struct.unpack_from(
+            "<HHHH", data, HEADER_SIZE
+        )
+        ret.update(
+            {
+                "chan_ident": chan_ident,
+                "fwd_hard_limit": fwd_hard_limit,
+                "rev_hard_limit": rev_hard_limit,
+            }
+        )
+    elif submsgid == 0xF:
+        (
+            chan_ident,
+            home_direction,
+            home_lim_switch,
+            home_step_rate,
+            home_offset_dist,
+        ) = struct.unpack_from("<HHHLl", data, HEADER_SIZE)
+        ret.update(
+            {
+                "chan_ident": chan_ident,
+                "home_direction": home_direction,
+                "home_lim_switch": home_lim_switch,
+                "home_step_rate": home_step_rate,
+                "home_offset_dist": home_offset_dist,
+            }
+        )
+    elif submsgid == 0x15:
+        (
+            chan_ident,
+            js_mode,
+            js_max_step_rate,
+            js_dir_sense,
+            preset_pos1,
+            preset_pos2,
+            disp_brightness,
+            _,
+        ) = struct.unpack_from("<HHlHllHH", data, HEADER_SIZE)
+        ret.update(
+            {
+                "chan_ident": chan_ident,
+                "js_mode": js_mode,
+                "js_max_step_rate": js_max_step_rate,
+                "js_dir_sense": js_dir_sense,
+                "preset_pos1": preset_pos1,
+                "preset_pos2": preset_pos2,
+                "disp_brightness": disp_brightness,
+            }
+        )
+    elif submsgid == 0x17:
+        (
+            trig_channel1,
+            trig_channel2,
+            trig1_mode,
+            trig1_polarity,
+            trig2_mode,
+            trig2_polarity,
+            *_,
+        ) = struct.unpack_from("<12H", data, HEADER_SIZE)
+        ret.update(
+            {
+                "trig_channel1": trig_channel1,
+                "trig_channel2": trig_channel2,
+                "trig1_mode": trig1_mode,
+                "trig1_polarity": trig1_polarity,
+                "trig2_mode": trig2_mode,
+                "trig2_polarity": trig2_polarity,
+            }
+        )
+    elif submsgid == 0x19:
+        (
+            chan_ident,
+            start_pos_fwd,
+            interval_fwd,
+            num_pulses_fwd,
+            start_pos_reverse,
+            interval_rev,
+            num_pulses_rev,
+            pulse_width,
+            num_cycles,
+        ) = struct.unpack_from("<Hllllllll", data, HEADER_SIZE)
+        ret.update(
+            {
+                "chan_ident": chan_ident,
+                "start_pos_fwd": start_pos_fwd,
+                "interval_fwd": interval_fwd,
+                "num_pulses_fwd": num_pulses_fwd,
+                "start_pos_reverse": start_pos_reverse,
+                "interval_rev": interval_rev,
+                "num_pulses_rev": num_pulses_rev,
+                "pulse_width": pulse_width,
+                "num_cycles": num_cycles,
+            }
+        )
+    elif submsgid == 0x2B:
+        mode = struct.unpack_from("<H", data, HEADER_SIZE)
+        ret.update(
+            {
+                "mode": mode,
+            }
+        )
+    elif submsgid == 0x2D:
+        (
+            chan_ident,
+            jog_mode,
+            jog_step_size_fwd,
+            jog_step_size_rev,
+            jog_step_rate,
+            jog_step_accn,
+        ) = struct.unpack_from("<HHllll", data, HEADER_SIZE)
+        ret.update(
+            {
+                "chan_ident": chan_ident,
+                "jog_mode": jog_mode,
+                "jog_step_size_fwd": jog_step_size_fwd,
+                "jog_step_size_rev": jog_step_size_rev,
+                "jog_step_rate": jog_step_rate,
+                "jog_step_accn": jog_step_accn,
+            }
+        )
+    elif submsgid == 0x30:
+        chan_ident, fb_signal_mode, encoder_const = struct.unpack_from(
+            "<HHl", data, HEADER_SIZE
+        )
+        ret.update(
+            {
+                "chan_ident": chan_ident,
+                "fb_signal_mode": fb_signal_mode,
+                "encoder_const": encoder_const,
+            }
+        )
+    elif submsgid == 0x32:
+        chan_ident, rel_distance = struct.unpack_from("<Hl", data, HEADER_SIZE)
+        ret.update(
+            {
+                "chan_ident": chan_ident,
+                "rel_distance": rel_distance,
+            }
+        )
+    elif submsgid == 0x34:
+        chan_ident, abs_distance = struct.unpack_from("<Hl", data, HEADER_SIZE)
+        ret.update(
+            {
+                "chan_ident": chan_ident,
+                "abs_distance": abs_distance,
+            }
+        )
+
+    return ret
+
+
+@parser(0x08D6)
+def pzmot_move_completed(data: bytes) -> Dict[str, Any]:
+    chan_ident, abs_position, _, _ = struct.unpack_from("<Hlll", data, HEADER_SIZE)
+    return {
+        "chan_ident": chan_ident,
+        "abs_position": abs_position,
+    }
+
+
+@parser(0x08E1)
+def pzmot_get_statusupdate(data: bytes) -> Dict[str, Any]:
+    chan_ident, position, _, status_bits = struct.unpack_from(
+        "<HllL", data, HEADER_SIZE
+    )
+    ret = {
+        "chan_ident": chan_ident,
+        "position": position,
+    }
+    ret.update(_parse_pzmot_status_bits(status_bits))
     return ret

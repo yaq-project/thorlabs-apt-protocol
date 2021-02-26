@@ -1870,3 +1870,291 @@ def tec_req_statusupdate(dest: int, source: int):
 
 def tec_ack_statusupdate(dest: int, source: int):
     return _pack(0x0862, dest, source)
+
+
+def pzmot_set_poscounts(
+    dest: int, source: int, chan_ident: int, position: int
+) -> bytes:
+    data = struct.pack("<HHll", 5, chan_ident, position, 0)
+    return _pack(0x0850, dest, source, data=data)
+
+
+def pzmot_req_poscounts(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x0851, dest, source, param1=5, param2=chan_ident)
+
+
+def pzmot_set_driveopparams(
+    dest: int,
+    source: int,
+    chan_ident: int,
+    max_voltage: int,
+    step_rate: int,
+    step_accn: int,
+) -> bytes:
+    data = struct.pack("<HHHll", 7, chan_ident, max_voltage, step_rate, step_accn)
+    return _pack(0x08C0, dest, source, data=data)
+
+
+def pzmot_req_driveopparams(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x08C1, dest, source, param1=7, param2=chan_ident)
+
+
+def tim_set_jogparams(
+    dest: int,
+    source: int,
+    chan_ident: int,
+    jog_mode: int,
+    jog_step_size: int,
+    jog_step_rate: int,
+    jog_step_accn: int,
+) -> bytes:
+    data = struct.pack(
+        "<HHHlll", 9, chan_ident, jog_mode, jog_step_size, jog_step_rate, jog_step_accn
+    )
+    return _pack(0x08C0, dest, source, data=data)
+
+
+def tim_req_jogparams(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x08C1, dest, source, param1=9, param2=chan_ident)
+
+
+def tim_set_potparams(
+    dest: int, source: int, chan_ident: int, max_step_rate: int
+) -> bytes:
+    data = struct.pack("<HHl", 0x11, chan_ident, max_step_rate)
+    return _pack(0x08C0, dest, source, data=data)
+
+
+def tim_req_potparams(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x08C1, dest, source, param1=0x11, param2=chan_ident)
+
+
+def tim_set_buttonparams(
+    dest: int, source: int, chan_ident: int, mode: int, position1: int, position2: int
+) -> bytes:
+    data = struct.pack("<HHHllHH", 0x13, chan_ident, mode, position1, position2, 0, 0)
+    return _pack(0x08C0, dest, source, data=data)
+
+
+def tim_req_buttonparams(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x08C1, dest, source, param1=0x13, param2=chan_ident)
+
+
+def pzmot_set_limswitchparams(
+    dest: int, source: int, chan_ident: int, fwd_hard_limit: int, rev_hard_limit: int
+) -> bytes:
+    data = struct.pack("<HHHHH", 0xB, chan_ident, fwd_hard_limit, rev_hard_limit, 0)
+    return _pack(0x08C0, dest, source, data=data)
+
+
+def pzmot_req_limswitchparams(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x08C1, dest, source, param1=0xB, param2=chan_ident)
+
+
+def pzmot_set_homeparams(
+    dest: int,
+    source: int,
+    chan_ident: int,
+    home_direction: int,
+    home_lim_switch: int,
+    home_step_rate: int,
+    home_offset_dist: int,
+) -> bytes:
+    data = struct.pack(
+        "<HHHHLl",
+        0xF,
+        chan_ident,
+        home_direction,
+        home_lim_switch,
+        home_step_rate,
+        home_offset_dist,
+    )
+    return _pack(0x08C0, dest, source, data=data)
+
+
+def pzmot_req_homeparams(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x08C1, dest, source, param1=0xF, param2=chan_ident)
+
+
+def pzmot_set_kcubemmiparams(
+    dest: int,
+    source: int,
+    chan_ident: int,
+    js_mode: int,
+    js_max_step_rate: int,
+    js_dir_sense: int,
+    preset_pos1: int,
+    preset_pos2: int,
+    disp_brightness: int,
+) -> bytes:
+    data = struct.pack(
+        "<HHHlHllHH",
+        0x15,
+        chan_ident,
+        js_mode,
+        js_max_step_rate,
+        js_dir_sense,
+        preset_pos1,
+        preset_pos2,
+        disp_brightness,
+        0,
+    )
+    return _pack(0x08C0, dest, source, data=data)
+
+
+def pzmot_req_kcubemmiparams(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x08C1, dest, source, param1=0x15, param2=chan_ident)
+
+
+def pzmot_set_kcubetrigioconfig(
+    dest: int,
+    source: int,
+    trig_channel1: int,
+    trig_channel2: int,
+    trig1_mode: int,
+    trig1_polarity: int,
+    trig2_mode: int,
+    trig2_polarity: int,
+) -> bytes:
+    data = struct.pack(
+        "<13H",
+        0x17,
+        trig_channel1,
+        trig_channel2,
+        trig1_mode,
+        trig1_polarity,
+        trig2_mode,
+        trig2_polarity,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+    )
+    return _pack(0x08C0, dest, source, data=data)
+
+
+def pzmot_req_kcubetrigioconfig(dest: int, source: int):
+    return _pack(0x08C1, dest, source, param1=0x17)
+
+
+def pzmot_set_kcubetrigparams(
+    dest: int,
+    source: int,
+    chan_ident: int,
+    start_pos_fwd: int,
+    interval_fwd: int,
+    num_pulses_fwd: int,
+    start_pos_reverse: int,
+    interval_rev: int,
+    num_pulses_rev: int,
+    pulse_width: int,
+    num_cycles: int,
+) -> bytes:
+    data = struct.pack(
+        "<HHllllllll",
+        0x19,
+        chan_ident,
+        start_pos_fwd,
+        interval_fwd,
+        num_pulses_fwd,
+        start_pos_reverse,
+        interval_rev,
+        num_pulses_rev,
+        pulse_width,
+        num_cycles,
+    )
+    return _pack(0x08C0, dest, source, data=data)
+
+
+def pzmot_req_kcubetrigparams(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x08C1, dest, source, param1=0x19, param2=chan_ident)
+
+
+def pzmot_set_kcubechanenablemode(dest: int, source: int, mode: int) -> bytes:
+    data = struct.pack("<HH", 0x2B, mode)
+    return _pack(0x08C0, dest, source, data=data)
+
+
+def pzmot_req_kcubechanenablemode(dest: int, source: int):
+    return _pack(0x08C1, dest, source, param1=0x2B)
+
+
+def pzmot_set_kcubejogparams(
+    dest: int,
+    source: int,
+    chan_ident: int,
+    jog_mode: int,
+    jog_step_size_fwd: int,
+    jog_step_size_rev: int,
+    jog_step_rate: int,
+    jog_step_accn: int,
+) -> bytes:
+    data = struct.pack(
+        "<HHHllll",
+        0x2D,
+        chan_ident,
+        jog_mode,
+        jog_step_size_fwd,
+        jog_step_size_rev,
+        jog_step_rate,
+        jog_step_accn,
+    )
+    return _pack(0x08C0, dest, source, data=data)
+
+
+def pzmot_req_kcubejogparams(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x08C1, dest, source, param1=0x2D, param2=chan_ident)
+
+
+def pzmot_set_kcubefeedbacksigparams(
+    dest: int, source: int, chan_ident: int, fb_signal_mode: int, encoder_const: int
+) -> bytes:
+    data = struct.pack("<HHHl", 0x30, chan_ident, fb_signal_mode, encoder_const)
+    return _pack(0x08C0, dest, source, data=data)
+
+
+def pzmot_req_kcubefeedbacksigparams(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x08C1, dest, source, param1=0x30, param2=chan_ident)
+
+
+def pzmot_set_kcubemoverelativeparams(
+    dest: int, source: int, chan_ident: int, rel_distance: int
+) -> bytes:
+    data = struct.pack("<HHl", 0x32, chan_ident, rel_distance)
+    return _pack(0x08C0, dest, source, data=data)
+
+
+def pzmot_req_kcubemoverelativeparams(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x08C1, dest, source, param1=0x32, param2=chan_ident)
+
+
+def pzmot_req_kcubemoveabsoluteparams(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x08C1, dest, source, param1=0x34, param2=chan_ident)
+
+
+def pzmot_set_kcubemoveabsoluteparams(
+    dest: int, source: int, chan_ident: int, rel_distance: int
+) -> bytes:
+    data = struct.pack("<HHl", 0x34, chan_ident, rel_distance)
+    return _pack(0x08C0, dest, source, data=data)
+
+
+def pzmot_move_absolute(
+    dest: int, source: int, chan_ident: int, abs_position: int
+) -> bytes:
+    data = struct.pack("<Hl", chan_ident, abs_position)
+    return _pack(0x08D4, dest, source, data=data)
+
+
+def pzmot_move_jog(dest: int, source: int, chan_ident: int, jog_dir: int) -> bytes:
+    return _pack(0x08D9, dest, source, param1=chan_ident, param2=jog_dir)
+
+
+def pzmot_req_statusupdate(dest: int, source: int, chan_ident: int) -> bytes:
+    return _pack(0x08E0, dest, source, param1=chan_ident)
+
+
+def pzmot_ack_statusupdate(dest: int, source: int) -> bytes:
+    return _pack(0x08E2, dest, source)
