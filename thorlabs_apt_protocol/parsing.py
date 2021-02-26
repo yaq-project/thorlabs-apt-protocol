@@ -1966,3 +1966,17 @@ def pzmot_get_statusupdate(data: bytes) -> Dict[str, Any]:
     }
     ret.update(_parse_pzmot_status_bits(status_bits))
     return ret
+
+
+@parser(0x0532)
+def pol_get_params(data: bytes) -> Dict[str, Any]:
+    _, velocity, home_position, jog_step1, jog_step2, jog_step3 = struct.unpack_from(
+        "<HHHHHH", data, HEADER_SIZE
+    )
+    return {
+        "velocity": velocity,
+        "home_position": home_position,
+        "jog_step1": jog_step1,
+        "jog_step2": jog_step2,
+        "jog_step3": jog_step3,
+    }
