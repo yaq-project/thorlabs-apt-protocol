@@ -2158,3 +2158,22 @@ def pzmot_req_statusupdate(dest: int, source: int, chan_ident: int) -> bytes:
 
 def pzmot_ack_statusupdate(dest: int, source: int) -> bytes:
     return _pack(0x08E2, dest, source)
+
+
+def pol_set_params(
+    dest: int,
+    source: int,
+    velocity: int,
+    home_position: int,
+    jog_step1: int,
+    jog_step2: int,
+    jog_step3: int,
+) -> bytes:
+    data = struct.pack(
+        "<HHHHHH", 0, velocity, home_position, jog_step1, jog_step2, jog_step3
+    )
+    return _pack(0x0530, dest, source, data=data)
+
+
+def pol_req_params(dest: int, source: int):
+    return _pack(0x0531, dest, source)
