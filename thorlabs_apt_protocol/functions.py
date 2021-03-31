@@ -640,6 +640,10 @@ def mot_req_statusupdate(dest: int, source: int, chan_ident: int):
     return _pack(0x0480, dest, source, param1=chan_ident)
 
 
+def mot_req_dcstatusupdate(dest: int, source: int, chan_ident: int):
+    return _pack(0x0490, dest, source, param1=chan_ident)
+
+
 def mot_suspend_endofmovemsges(dest: int, source: int):
     return _pack(0x046B, dest, source)
 
