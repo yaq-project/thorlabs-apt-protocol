@@ -445,7 +445,14 @@ def mot_get_dcpidparams(data: bytes) -> Dict[str, Any]:
         integral_limits,
         filter_control,
     ) = struct.unpack_from("<H4LH", data, HEADER_SIZE)
-    return {"chan_ident": data[2], "enabled": data[3] == 0x01}
+    return {
+        "chan_ident": chan_ident,
+        "proportional": proportional,
+        "integral": integral,
+        "differential": differential,
+        "integral_limits": integral_limits,
+        "filter_control": filter_control
+    }
 
 
 @parser(0x04B5)
