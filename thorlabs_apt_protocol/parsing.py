@@ -26,8 +26,10 @@ def parser(msgid):
 
 
 def _parse_dcstatus(data: bytes) -> Dict[str, Any]:
+    # I believe the documentation is wrong and velocity is encoded as a "short" and not a "word"
+    # (A stage moving in reverse should return a negative velocity, not a very large positive one!)
     chan_ident, position, velocity, _, status_bits = struct.unpack_from(
-        "<HlHHL", data, HEADER_SIZE
+        "<HlhHL", data, HEADER_SIZE
     )
     ret = {
         "chan_ident": chan_ident,
