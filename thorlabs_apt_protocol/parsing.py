@@ -361,7 +361,7 @@ def mot_get_powerparams(data: bytes) -> Dict[str, Any]:
 
 
 @parser(0x043C)
-def mot_genmoveparams(data: bytes) -> Dict[str, Any]:
+def mot_get_genmoveparams(data: bytes) -> Dict[str, Any]:
     chan_ident, backlash_distance = struct.unpack_from("<Hl", data, HEADER_SIZE)
     return {"chan_ident": chan_ident, "backlash_distance": backlash_distance}
 
