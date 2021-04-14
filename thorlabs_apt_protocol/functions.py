@@ -653,7 +653,11 @@ def mot_resume_endofmovemsges(dest: int, source: int):
 
 
 def mot_set_trigger(dest: int, source: int, chan_ident: int, mode: int) -> bytes:
-    # Bitfield
+    # Mode parameter is a bitfield, built as an (unsigned) int, but _pack expects a signed char
+    # Convert the python int to equivalent signed 1-byte value
+    mode &= 0xff
+    if mode >= 2**7:
+        mode -= 2**8
     return _pack(0x0500, dest, source, param1=chan_ident, param2=mode)
 
 
