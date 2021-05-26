@@ -214,7 +214,7 @@ def hw_response(data: bytes) -> Dict[str, Any]:
 
 @parser(0x0081)
 def hw_richresponse(data: bytes) -> Dict[str, Any]:
-    msg_ident, code, notes = struct.unpack_from("<HH64c", data, HEADER_SIZE)
+    msg_ident, code, notes = struct.unpack_from("<HH64s", data, HEADER_SIZE)
     return {"msg_ident": msg_ident, "code": code, "notes": notes}
 
 
