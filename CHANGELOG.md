@@ -1,5 +1,7 @@
 # [Unreleased]
 
+- Correctly offset messages with submsgid to parse the remaining values correctly
+
 # [25.2.0]
 - Add missing `req_dcstatusupdate` function
 - Add data fields to `get_dcpidparams`

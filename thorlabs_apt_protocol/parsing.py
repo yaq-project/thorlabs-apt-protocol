@@ -1417,27 +1417,28 @@ def nt_get_tnaiosettings(data: bytes) -> Dict[str, Any]:
 def la_get_params(data: bytes) -> Dict[str, Any]:
     (submsgid,) = struct.unpack_from("<H", data, HEADER_SIZE)
     ret = {"submsgid": submsgid}
+    data = data[2:]
     if submsgid == 1:
-        setpoint = struct.unpack_from("<H", data, HEADER_SIZE + 2)
+        setpoint = struct.unpack_from("<H", data, HEADER_SIZE)
         ret.update({"setpoint": setpoint})
     elif submsgid == 3:
-        current, power = struct.unpack_from("<HH", data, HEADER_SIZE + 2)
+        current, power = struct.unpack_from("<HH", data, HEADER_SIZE)
         ret.update({"current": current, "power": power})
     elif submsgid == 4:
-        current, power, voltage = struct.unpack_from("<Hhh", data, HEADER_SIZE + 2)
+        current, power, voltage = struct.unpack_from("<Hhh", data, HEADER_SIZE)
         ret.update({"current": current, "power": power, "voltage": voltage})
     elif submsgid == 5:
-        (laser_source,) = struct.unpack_from("<H", data, HEADER_SIZE + 2)
+        (laser_source,) = struct.unpack_from("<H", data, HEADER_SIZE)
         ret.update({"laser_source": laser_source})
     elif submsgid == 5:
-        (laser_source,) = struct.unpack_from("<H", data, HEADER_SIZE + 2)
+        (laser_source,) = struct.unpack_from("<H", data, HEADER_SIZE)
         ret.update({"laser_source": laser_source})
     elif submsgid == 7:
-        (statusbits,) = struct.unpack_from("<L", data, HEADER_SIZE + 2)
+        (statusbits,) = struct.unpack_from("<L", data, HEADER_SIZE)
         ret.update(_parse_la_status_bits(statusbits))
     elif submsgid == 9:
         max_current, max_power, wavelength = struct.unpack_from(
-            "<HHH", data, HEADER_SIZE + 2
+            "<HHH", data, HEADER_SIZE
         )
         ret.update(
             {
@@ -1447,26 +1448,26 @@ def la_get_params(data: bytes) -> Dict[str, Any]:
             }
         )
     elif submsgid == 10:
-        (max_current,) = struct.unpack_from("<h", data, HEADER_SIZE + 2)
+        (max_current,) = struct.unpack_from("<h", data, HEADER_SIZE)
         ret.update({"max_current": max_current})
     elif submsgid == 11:
-        intensity, units, _ = struct.unpack_from("<HHH", data, HEADER_SIZE + 2)
+        intensity, units, _ = struct.unpack_from("<HHH", data, HEADER_SIZE)
         ret.update({"intensity": intensity, "units": units})
     elif submsgid == 13:
         calib_factor, polarity, ramp_up = struct.unpack_from(
-            "<fHH", data, HEADER_SIZE + 2
+            "<fHH", data, HEADER_SIZE
         )
         ret.update(
             {"calib_factor": calib_factor, "polarity": polarity, "ramp_up": ramp_up}
         )
     elif submsgid == 14:
-        disp_intensity, _, _, _ = struct.unpack_from("<HHHH", data, HEADER_SIZE + 2)
+        disp_intensity, _, _, _ = struct.unpack_from("<HHHH", data, HEADER_SIZE)
         ret.update({"disp_intensity": disp_intensity})
     elif submsgid == 17:
         (
             dig_outs,
             _,
-        ) = struct.unpack_from("<HH", data, HEADER_SIZE + 2)
+        ) = struct.unpack_from("<HH", data, HEADER_SIZE)
         ret.update({"dig_outs": dig_outs})
 
     return ret
@@ -1535,6 +1536,7 @@ def la_get_kcubetrigconfig(data: bytes) -> Dict[str, Any]:
 def quad_get_params(data: bytes) -> Dict[str, Any]:
     (submsgid,) = struct.unpack_from("<H", data, HEADER_SIZE)
     ret = {"submsgid": submsgid}
+    data = data[2:]
     if submsgid == 1:
         PGain, IGain, DGain = struct.unpack_from("<HHH", data, HEADER_SIZE)
         ret.update(
@@ -1688,6 +1690,7 @@ def quad_get_statusupdate(data: bytes) -> Dict[str, Any]:
 def tec_get_params(data: bytes) -> Dict[str, Any]:
     (submsgid,) = struct.unpack_from("<H", data, HEADER_SIZE)
     ret = {"submsgid": submsgid}
+    data = data[2:]
     if submsgid == 1:
         (temp_set,) = struct.unpack_from("<H", data, HEADER_SIZE)
         ret.update({"temp_set": temp_set})
@@ -1746,6 +1749,7 @@ def tec_get_statusupdate(data: bytes) -> Dict[str, Any]:
 def pzmot_get_params(data: bytes) -> Dict[str, Any]:
     (submsgid,) = struct.unpack_from("<H", data, HEADER_SIZE)
     ret = {"submsgid": submsgid}
+    data = data[2:]
     if submsgid == 5:
         chan_ident, position, _ = struct.unpack_from("<Hll", data, HEADER_SIZE)
         ret.update(
