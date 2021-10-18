@@ -30,7 +30,7 @@ Please note that not _all_ of the messages in the protocol are represented at th
 In particular, those related to Piezo controllers, Laser Control, and Quad control are not yet implemented
 
 
-[Unreleased]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v25.2.0...master
+[Unreleased]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v25.2.0...main
 [25.1.0]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v25.1.0...v25.2.0
 [25.1.0]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v25.0.1...v25.1.0
 [25.0.1]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v25.0.0...v25.0.1
