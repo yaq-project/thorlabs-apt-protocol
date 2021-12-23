@@ -423,12 +423,18 @@ def mot_move_homed(data: bytes) -> Dict[str, Any]:
 
 @parser(0x0464)
 def mot_move_completed(data: bytes) -> Dict[str, Any]:
-    return _parse_dcstatus(data)
+    if data[4] & 0x80:
+        return _parse_dcstatus(data)
+    else:
+        return {"chan_ident": data[2]}
 
 
 @parser(0x0466)
 def mot_move_stopped(data: bytes) -> Dict[str, Any]:
-    return _parse_dcstatus(data)
+    if data[4] & 0x80:
+        return _parse_dcstatus(data)
+    else:
+        return {"chan_ident": data[2]}
 
 
 @parser(0x04F6)
