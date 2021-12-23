@@ -1,6 +1,7 @@
 # [Unreleased]
 
 - Correctly offset messages with submsgid to parse the remaining values correctly
+- Update parsing of DCStatusupdate to match current version of spec
 - correctly handle short dcstatus messages
 
 # [25.2.0]

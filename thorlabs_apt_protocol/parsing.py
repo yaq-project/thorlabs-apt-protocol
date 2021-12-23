@@ -55,10 +55,11 @@ def _parse_status(data: bytes) -> Dict[str, Any]:
 
 def _parse_status_bits(status_bits: int) -> Dict[str, Any]:
     # Bitfield
-    # Tracking and interlock are the same bit?
     return {
         "forward_limit_switch": bool(status_bits & 0x1),
         "reverse_limit_switch": bool(status_bits & 0x2),
+        "forward_limit_soft": bool(status_bits & 0x4),
+        "reverse_limit_soft": bool(status_bits & 0x8),
         "moving_forward": bool(status_bits & 0x10),
         "moving_reverse": bool(status_bits & 0x20),
         "jogging_forward": bool(status_bits & 0x40),
@@ -66,11 +67,28 @@ def _parse_status_bits(status_bits: int) -> Dict[str, Any]:
         "motor_connected": bool(status_bits & 0x100),
         "homing": bool(status_bits & 0x200),
         "homed": bool(status_bits & 0x400),
+        "initializing": bool(status_bits & 0x800),
         "tracking": bool(status_bits & 0x1000),
-        "interlock": bool(status_bits & 0x1000),
         "settled": bool(status_bits & 0x2000),
         "motion_error": bool(status_bits & 0x4000),
+        "instrument_error": bool(status_bits & 0x8000),
+        "interlock": bool(status_bits & 0x10000),
+        "overtemp": bool(status_bits & 0x20000),
+        "voltage_fault": bool(status_bits & 0x40000),
+        "commutation_error": bool(status_bits & 0x80000),
+        "dig_ins": [
+            bool(status_bits & 0x100000),
+            bool(status_bits & 0x200000),
+            bool(status_bits & 0x300000),
+            bool(status_bits & 0x400000)
+        ],
         "motor_current_limit_reached": bool(status_bits & 0x1000000),
+        "encoder_fault": bool(status_bits & 0x2000000),
+        "overcurrent": bool(status_bits & 0x4000000),
+        "current_fault": bool(status_bits & 0x8000000),
+        "power_ok": bool(status_bits & 0x10000000),
+        "active": bool(status_bits & 0x20000000),
+        "error": bool(status_bits & 0x40000000),
         "channel_enabled": bool(status_bits & 0x80000000),
     }
 
