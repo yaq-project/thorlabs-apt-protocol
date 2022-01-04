@@ -1,5 +1,9 @@
 # Thorlabs APT protocol
 
+[![PyPI](https://img.shields.io/pypi/v/thorlabs-apt-protocol)](https://pypi.org/project/thorlabs-apt-protocol) 
+[![Conda](https://img.shields.io/conda/vn/conda-forge/thorlabs-apt-protocol)](https://anaconda.org/conda-forge/thorlabs-apt-protocol)
+[![yaq](https://img.shields.io/badge/sans-io-white)](https://sans-io.readthedocs.io/)
+
 A functional implementation of the [Thorlabs APT protocol](https://www.thorlabs.com/Software/Motion%20Control/APT_Communications_Protocol.pdf)
 
 ## Outgoing messages
