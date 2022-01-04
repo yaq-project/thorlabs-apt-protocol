@@ -37,7 +37,7 @@ In particular, those related to Piezo controllers, Laser Control, and Quad contr
 
 [Unreleased]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v29.0.0...main
 [29.0.0]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v25.2.0...v29.0.0
-[25.1.0]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v25.1.0...v25.2.0
+[25.2.0]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v25.1.0...v25.2.0
 [25.1.0]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v25.0.1...v25.1.0
 [25.0.1]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v25.0.0...v25.0.1
 [25.0.0]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/tags/v25.0.0
