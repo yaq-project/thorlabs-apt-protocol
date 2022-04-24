@@ -1,5 +1,7 @@
 # [Unreleased]
 
+- Add parsing of `stage_info` field of `hw_get_info`
+
 # [29.0.0]
 
 - Correctly offset messages with submsgid to parse the remaining values correctly
