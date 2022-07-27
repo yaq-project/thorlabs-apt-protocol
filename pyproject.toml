@@ -7,7 +7,7 @@ module = "thorlabs_apt_protocol"
 dist-name = "thorlabs-apt-protocol"
 author = "Kyle Sunden"
 author-email = "contact@ksunden.space"
-home-page = "https://gitlab.com/yaq/thorlabs-apt-protocol"
+home-page = "https://github.com/yaq-project/thorlabs-apt-protocol"
 requires-python = ">=3.6"
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -25,8 +25,8 @@ classifiers = [
 description-file = "README.md"
 
 [tool.flit.metadata.urls]
-Source = "https://gitlab.com/yaq/thorlabs-apt-protocol"
-Issues = "https://gitlab.com/yaq/thorlabs-apt-protocol/issues"
+Source = "https://github.com/yaq-project/thorlabs-apt-protocol"
+Issues = "https://github.com/yaq-project/thorlabs-apt-protocol/issues"
 
 [tool.flit.metadata.requires-extra]
 dev = ["black", "pre-commit"]

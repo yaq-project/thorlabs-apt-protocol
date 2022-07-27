@@ -37,9 +37,9 @@ Please note that not _all_ of the messages in the protocol are represented at th
 In particular, those related to Piezo controllers, Laser Control, and Quad control are not yet implemented
 
 
-[Unreleased]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v29.0.0...main
-[29.0.0]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v25.2.0...v29.0.0
-[25.2.0]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v25.1.0...v25.2.0
-[25.1.0]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v25.0.1...v25.1.0
-[25.0.1]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/compare/v25.0.0...v25.0.1
-[25.0.0]: https://gitlab.com/yaq/thorlabs-apt-protocol/-/tags/v25.0.0
+[Unreleased]: https://github.com/yaq-project/thorlabs-apt-protocol/compare/v29.0.0...main
+[29.0.0]: https://github.com/yaq-project/thorlabs-apt-protocol/compare/v25.2.0...v29.0.0
+[25.2.0]: https://github.com/yaq-project/thorlabs-apt-protocol/compare/v25.1.0...v25.2.0
+[25.1.0]: https://github.com/yaq-project/thorlabs-apt-protocol/compare/v25.0.1...v25.1.0
+[25.0.1]: https://github.com/yaq-project/thorlabs-apt-protocol/compare/v25.0.0...v25.0.1
+[25.0.0]: https://github.com/yaq-project/thorlabs-apt-protocol/tags/v25.0.0
