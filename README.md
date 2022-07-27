@@ -1,6 +1,6 @@
 # Thorlabs APT protocol
 
-[![PyPI](https://img.shields.io/pypi/v/thorlabs-apt-protocol)](https://pypi.org/project/thorlabs-apt-protocol) 
+[![PyPI](https://img.shields.io/pypi/v/thorlabs-apt-protocol)](https://pypi.org/project/thorlabs-apt-protocol)
 [![Conda](https://img.shields.io/conda/vn/conda-forge/thorlabs-apt-protocol)](https://anaconda.org/conda-forge/thorlabs-apt-protocol)
 [![yaq](https://img.shields.io/badge/sans-io-white)](https://sans-io.readthedocs.io/)
 
@@ -17,7 +17,7 @@ For example:
 
 ```python
 >>> import thorlabs_apt_protocol as apt
->>> 
+>>>
 >>> apt.mot_move_home(source=1, dest=0x50 ,chan_ident=1)
 b'C\x04\x01\x00P\x01'
 >>> apt.mot_move_absolute(source=1, dest=0x50, chan_ident=1, position=2048)
@@ -38,7 +38,7 @@ Usage with pyserial:
 ```python
 >>> import thorlabs_apt_protocol as apt
 >>> import serial
->>> 
+>>>
 >>> port = serial.Serial("/dev/ttyUSB0", 115200, rtscts=True, timeout=0.1)
 >>> port.rts = True
 >>> port.reset_input_buffer()
@@ -48,8 +48,8 @@ Usage with pyserial:
 >>> unpacker = apt.Unpacker(port)
 >>> for msg in unpacker:
 ...     print(msg)
-... 
->>> 
+...
+>>>
 ```
 
 On Windows, you must toggle a driver setting to make the COM port appear:
@@ -61,7 +61,7 @@ Unplug and replug the USB cable to make it load the COM Port.
 If the `Advanced` tab does not appear, I was able to use FTDI's [FT_PROG](https://www.ftdichip.com/Support/Utilities.htm#FT_PROG).
 With all other Thorlabs programs not running, click `Devices > Scan for devices`.
 Review over the provided ID information to ensure that you are editing the correct device, FTDI provides serial communication for many different devices from several manufacturers, it is very possible you have multiple devices which show up.
-Under the `Hardware Specific`, uncheck the `Load D2XX` box. 
+Under the `Hardware Specific`, uncheck the `Load D2XX` box.
 This box is a bit of a misnomer, as it really means "Load _only_ D2XX", as when unchecked the D2XX driver (which the Thorlabs provided programs use) is still loaded, but the VCP driver is also loaded.
 Click `Devices > Program`.
 

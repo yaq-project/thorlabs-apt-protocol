@@ -80,7 +80,7 @@ def _parse_status_bits(status_bits: int) -> Dict[str, Any]:
             bool(status_bits & 0x100000),
             bool(status_bits & 0x200000),
             bool(status_bits & 0x300000),
-            bool(status_bits & 0x400000)
+            bool(status_bits & 0x400000),
         ],
         "motor_current_limit_reached": bool(status_bits & 0x1000000),
         "encoder_fault": bool(status_bits & 0x2000000),
@@ -364,8 +364,8 @@ def mot_get_jogparams(data: bytes) -> Dict[str, Any]:
 def mot_get_adcinputs(data: bytes) -> Dict[str, Any]:
     adc_input1, adc_input2 = struct.unpack_from("<HH", data, HEADER_SIZE)
     return {
-        "adc_input1": adc_input1 * 5 / 2 ** 15,
-        "adc_input2": adc_input2 * 5 / 2 ** 15,
+        "adc_input1": adc_input1 * 5 / 2**15,
+        "adc_input2": adc_input2 * 5 / 2**15,
     }
 
 
@@ -478,7 +478,7 @@ def mot_get_dcpidparams(data: bytes) -> Dict[str, Any]:
         "integral": integral,
         "differential": differential,
         "integral_limits": integral_limits,
-        "filter_control": filter_control
+        "filter_control": filter_control,
     }
 
 
@@ -1479,9 +1479,7 @@ def la_get_params(data: bytes) -> Dict[str, Any]:
         intensity, units, _ = struct.unpack_from("<HHH", data, HEADER_SIZE)
         ret.update({"intensity": intensity, "units": units})
     elif submsgid == 13:
-        calib_factor, polarity, ramp_up = struct.unpack_from(
-            "<fHH", data, HEADER_SIZE
-        )
+        calib_factor, polarity, ramp_up = struct.unpack_from("<fHH", data, HEADER_SIZE)
         ret.update(
             {"calib_factor": calib_factor, "polarity": polarity, "ramp_up": ramp_up}
         )
