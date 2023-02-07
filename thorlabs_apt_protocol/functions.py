@@ -817,12 +817,10 @@ def mot_req_mmf_operparams(dest: int, source: int, chan_ident: int):
 def mot_set_sol_operatingmode(
     dest: int, source: int, chan_ident: int, mode: int
 ) -> bytes:
-
     return _pack(0x04C0, dest, source, param1=chan_ident, param2=mode)
 
 
 def mot_req_sol_operatingmode(dest: int, source: int, chan_ident: int) -> bytes:
-
     return _pack(0x04C1, dest, source, param1=chan_ident)
 
 
