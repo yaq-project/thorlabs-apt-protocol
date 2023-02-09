@@ -2185,15 +2185,42 @@ def pol_req_params(dest: int, source: int):
     return _pack(0x0531, dest, source)
 
 
-def mot_set_mottrigioconfig(dest: int, source: int, chan_ident: int, trig_in_mode: int, trig_in_polarity: int,
-                            trig_in_source: int, trig_out_mode: int, trig_out_polarity: int, start_pos_fwd: int,
-                            interval_fwd: int, num_pulses_fwd: int, start_pos_rev: int, interval_rev: int,
-                            num_pulses_rev: int, pulse_width: int, num_cycles: int) -> bytes:
-    data = struct.pack("<6H8lH",
-                       chan_ident, trig_in_mode, trig_in_polarity, trig_in_source,
-                       trig_out_mode, trig_out_polarity, start_pos_fwd, interval_fwd,
-                       num_pulses_fwd, start_pos_rev, interval_rev,
-                       num_pulses_rev, pulse_width, num_cycles, 0)
+def mot_set_mottrigioconfig(
+    dest: int,
+    source: int,
+    chan_ident: int,
+    trig_in_mode: int,
+    trig_in_polarity: int,
+    trig_in_source: int,
+    trig_out_mode: int,
+    trig_out_polarity: int,
+    start_pos_fwd: int,
+    interval_fwd: int,
+    num_pulses_fwd: int,
+    start_pos_rev: int,
+    interval_rev: int,
+    num_pulses_rev: int,
+    pulse_width: int,
+    num_cycles: int,
+) -> bytes:
+    data = struct.pack(
+        "<6H8lH",
+        chan_ident,
+        trig_in_mode,
+        trig_in_polarity,
+        trig_in_source,
+        trig_out_mode,
+        trig_out_polarity,
+        start_pos_fwd,
+        interval_fwd,
+        num_pulses_fwd,
+        start_pos_rev,
+        interval_rev,
+        num_pulses_rev,
+        pulse_width,
+        num_cycles,
+        0,
+    )
     return _pack(0x0260, dest, source, data=data)
 
 
@@ -2201,7 +2228,9 @@ def mot_req_mottrigioconfig(dest: int, source: int, chan_ident: int) -> bytes:
     return _pack(0x0261, dest, source, param1=chan_ident)
 
 
-def mot_set_ioconfig(dest: int, source: int, io_port: int, mode: int, out_source: int) -> bytes:
+def mot_set_ioconfig(
+    dest: int, source: int, io_port: int, mode: int, out_source: int
+) -> bytes:
     data = struct.pack("<HHH", io_port, mode, out_source)
     return _pack(0x0263, dest, source, data=data)
 
@@ -2210,26 +2239,41 @@ def mot_req_ioconfig(dest: int, source: int, chan_ident: int, io_port: int) -> b
     return _pack(0x0264, dest, source, param1=chan_ident, param2=io_port)
 
 
-def mot_set_auxioconfig(dest: int, source: int, out_port: int, mode: int, sw_source: int) -> bytes:
+def mot_set_auxioconfig(
+    dest: int, source: int, out_port: int, mode: int, sw_source: int
+) -> bytes:
     data = struct.pack("<HHH", out_port, mode, sw_source)
     return _pack(0x0266, dest, source, data=data)
 
 
-def mot_req_auxioconfig(dest: int, source: int, chan_ident: int, out_port: int) -> bytes:
+def mot_req_auxioconfig(
+    dest: int, source: int, chan_ident: int, out_port: int
+) -> bytes:
     return _pack(0x0267, dest, source, param1=chan_ident, param2=out_port)
 
 
-def mot_set_analogmonitorconfig(dest: int, source: int, monitor: int, motor_channel: int, sys_var: int,
-                                scale: int, offset: int) -> bytes:
+def mot_set_analogmonitorconfig(
+    dest: int,
+    source: int,
+    monitor: int,
+    motor_channel: int,
+    sys_var: int,
+    scale: int,
+    offset: int,
+) -> bytes:
     data = struct.pack("<HHHll", monitor, motor_channel, sys_var, scale, offset)
     return _pack(0x0269, dest, source, data=data)
 
 
-def mot_req_analogmonitorconfig(dest: int, source: int, chan_ident: int, io_port: int) -> bytes:
-    return _pack(0x0270, dest, source, param1=chan_ident, param2 = io_port)
+def mot_req_analogmonitorconfig(
+    dest: int, source: int, chan_ident: int, io_port: int
+) -> bytes:
+    return _pack(0x0270, dest, source, param1=chan_ident, param2=io_port)
 
 
-def mot_set_postrigenstate(dest: int, source: int, chan_ident: int, state: int) -> bytes:
+def mot_set_postrigenstate(
+    dest: int, source: int, chan_ident: int, state: int
+) -> bytes:
     return _pack(0x0272, dest, source, param1=chan_ident, param2=state)
 
 
@@ -2237,9 +2281,17 @@ def mot_req_postrigenstate(dest: int, source: int, chan_ident: int) -> bytes:
     return _pack(0x0273, dest, source, param1=chan_ident)
 
 
-def mot_set_lcddisplayparams(dest: int, source: int, js_sensitivity: int, disp_brightness: int, disp_time_out: int,
-                             disp_dim_level: int) -> bytes:
-    data = struct.pack("<HHHHH", js_sensitivity, disp_brightness, disp_time_out, disp_dim_level, 0)
+def mot_set_lcddisplayparams(
+    dest: int,
+    source: int,
+    js_sensitivity: int,
+    disp_brightness: int,
+    disp_time_out: int,
+    disp_dim_level: int,
+) -> bytes:
+    data = struct.pack(
+        "<HHHHH", js_sensitivity, disp_brightness, disp_time_out, disp_dim_level, 0
+    )
     return _pack(0x0543, dest, source, data=data)
 
 
@@ -2247,9 +2299,28 @@ def mot_req_lcddisplayparams(dest: int, source: int, chan_ident: int) -> bytes:
     return _pack(0x0544, dest, source, param1=chan_ident)
 
 
-def mot_set_lcdmoveparams(dest: int, source: int, chan_ident: int, js_mode: int, jog_step_size: int,
-                          accn: int, max_vel: int, jog_stop_mode: int, preset_pos: int) -> bytes:
-    data = struct.pack("<HH3lHlH", chan_ident, js_mode, jog_step_size, accn, max_vel, jog_stop_mode, preset_pos, 0)
+def mot_set_lcdmoveparams(
+    dest: int,
+    source: int,
+    chan_ident: int,
+    js_mode: int,
+    jog_step_size: int,
+    accn: int,
+    max_vel: int,
+    jog_stop_mode: int,
+    preset_pos: int,
+) -> bytes:
+    data = struct.pack(
+        "<HH3lHlH",
+        chan_ident,
+        js_mode,
+        jog_step_size,
+        accn,
+        max_vel,
+        jog_stop_mode,
+        preset_pos,
+        0,
+    )
     return _pack(0x0546, dest, source, data=data)
 
 
@@ -2257,18 +2328,53 @@ def mot_req_lcdmoveparams(dest: int, source: int, chan_ident: int) -> bytes:
     return _pack(0x0547, dest, source, param1=chan_ident)
 
 
-def mot_set_movesyncharray(dest: int, source: int, array_id: int, channels: int, num_points: int, start_ix: int,
-                           time_pos: list[int]) -> bytes:
-    data = struct.pack("<HHHH" + "l" * len(time_pos), array_id, channels, num_points, start_ix, *time_pos)
+def mot_set_movesyncharray(
+    dest: int,
+    source: int,
+    array_id: int,
+    channels: int,
+    num_points: int,
+    start_ix: int,
+    time_pos: list[int],
+) -> bytes:
+    data = struct.pack(
+        "<HHHH" + "l" * len(time_pos),
+        array_id,
+        channels,
+        num_points,
+        start_ix,
+        *time_pos
+    )
     return _pack(0x0A00, dest, source, data=data)
 
 
-def mot_set_movesynchparams(dest: int, source: int, array_id: int, cycle_start_ix: int, cycle_end_ix: int,
-                            num_cycles: int, end_ix: int, deceleration: int) -> bytes:
-    data = struct.pack("<5Hl3H", array_id, cycle_start_ix, cycle_end_ix, num_cycles, end_ix, deceleration, 0, 0, 0)
+def mot_set_movesynchparams(
+    dest: int,
+    source: int,
+    array_id: int,
+    cycle_start_ix: int,
+    cycle_end_ix: int,
+    num_cycles: int,
+    end_ix: int,
+    deceleration: int,
+) -> bytes:
+    data = struct.pack(
+        "<5Hl3H",
+        array_id,
+        cycle_start_ix,
+        cycle_end_ix,
+        num_cycles,
+        end_ix,
+        deceleration,
+        0,
+        0,
+        0,
+    )
     return _pack(0x0A03, dest, source, data=data)
 
 
-def mot_move_synchstart(dest: int, source: int, array_id: int, channels: int, trigger: int) -> bytes:
+def mot_move_synchstart(
+    dest: int, source: int, array_id: int, channels: int, trigger: int
+) -> bytes:
     data = struct.pack("<3H", array_id, channels, trigger)
     return _pack(0x0A06, dest, source, data=data)

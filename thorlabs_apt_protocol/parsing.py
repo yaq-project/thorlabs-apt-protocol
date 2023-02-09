@@ -2020,9 +2020,23 @@ def pol_get_params(data: bytes) -> Dict[str, Any]:
 
 @parser(0x0262)
 def mot_get_mottrigioconfig(data: bytes) -> Dict[str, Any]:
-    chan_ident, trig_in_mode, trig_in_polarity, trig_in_source, trig_out_mode, trig_out_polarity,\
-    start_pos_fwd, interval_fwd, num_pulses_fwd, start_pos_rev, interval_rev, num_pulses_rev, pulse_width,\
-    num_cycles, _ = struct.unpack_from("<6H8lH", data, HEADER_SIZE)
+    (
+        chan_ident,
+        trig_in_mode,
+        trig_in_polarity,
+        trig_in_source,
+        trig_out_mode,
+        trig_out_polarity,
+        start_pos_fwd,
+        interval_fwd,
+        num_pulses_fwd,
+        start_pos_rev,
+        interval_rev,
+        num_pulses_rev,
+        pulse_width,
+        num_cycles,
+        _,
+    ) = struct.unpack_from("<6H8lH", data, HEADER_SIZE)
     return {
         "chan_ident": chan_ident,
         "trig_in_mode": trig_in_mode,
@@ -2063,7 +2077,9 @@ def mot_get_auxioconfig(data: bytes) -> Dict[str, Any]:
 
 @parser(0x0271)
 def mot_get_analogmonitorconfig(data: bytes) -> Dict[str, Any]:
-    monitor, motor_channel, sys_var, scale, offset = struct.unpack_from("<HHHll", data, HEADER_SIZE)
+    monitor, motor_channel, sys_var, scale, offset = struct.unpack_from(
+        "<HHHll", data, HEADER_SIZE
+    )
     return {
         "monitor": monitor,
         "motor_channel": motor_channel,
@@ -2074,13 +2090,19 @@ def mot_get_analogmonitorconfig(data: bytes) -> Dict[str, Any]:
 
 
 @parser(0x0274)
-def mot_get_postrigenstate(data:bytes) -> Dict[str, Any]:
+def mot_get_postrigenstate(data: bytes) -> Dict[str, Any]:
     return {"chan_ident": data[2], "state": data[3]}
 
 
 @parser(0x0545)
 def mot_get_lcddisplayparams(data: bytes) -> Dict[str, Any]:
-    js_sensitivity, disp_brightness, disp_time_out, disp_dim_level, _ = struct.unpack_from("<HHHHH", data, HEADER_SIZE)
+    (
+        js_sensitivity,
+        disp_brightness,
+        disp_time_out,
+        disp_dim_level,
+        _,
+    ) = struct.unpack_from("<HHHHH", data, HEADER_SIZE)
     return {
         "js_sensitivity": js_sensitivity,
         "disp_brightness": disp_brightness,
@@ -2091,7 +2113,16 @@ def mot_get_lcddisplayparams(data: bytes) -> Dict[str, Any]:
 
 @parser(0x0548)
 def mot_get_lcdmoveparams(data: bytes) -> Dict[str, Any]:
-    chan_ident, js_mode, jog_step_size, accn, max_vel, jog_stop_mode, preset_pos, _ = struct.unpack_from("<HH3lHlH",data, HEADER_SIZE)
+    (
+        chan_ident,
+        js_mode,
+        jog_step_size,
+        accn,
+        max_vel,
+        jog_stop_mode,
+        preset_pos,
+        _,
+    ) = struct.unpack_from("<HH3lHlH", data, HEADER_SIZE)
     return {
         "chan_ident": chan_ident,
         "js_mode": js_mode,
