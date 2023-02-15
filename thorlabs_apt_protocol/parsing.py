@@ -1438,7 +1438,7 @@ def nt_get_tnaiosettings(data: bytes) -> Dict[str, Any]:
     }
 
 
-@parser(0x0800)
+@parser(0x0802)
 def la_get_params(data: bytes) -> Dict[str, Any]:
     (submsgid,) = struct.unpack_from("<H", data, HEADER_SIZE)
     ret = {"submsgid": submsgid}
