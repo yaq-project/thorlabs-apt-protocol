@@ -1628,6 +1628,10 @@ def la_ack_statusupdate(dest: int, source: int):
     return _pack(0x0822, dest, source)
 
 
+def ld_req_statusupdate(dest: int, source: int):
+    return _pack(0x0825, dest, source)
+
+
 def ld_ack_statusupdate(dest: int, source: int):
     return _pack(0x0827, dest, source)
 
