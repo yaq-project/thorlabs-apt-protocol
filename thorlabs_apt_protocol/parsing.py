@@ -1455,9 +1455,6 @@ def la_get_params(data: bytes) -> Dict[str, Any]:
     elif submsgid == 5:
         (laser_source,) = struct.unpack_from("<H", data, HEADER_SIZE)
         ret.update({"laser_source": laser_source})
-    elif submsgid == 5:
-        (laser_source,) = struct.unpack_from("<H", data, HEADER_SIZE)
-        ret.update({"laser_source": laser_source})
     elif submsgid == 7:
         (statusbits,) = struct.unpack_from("<L", data, HEADER_SIZE)
         ret.update(_parse_la_status_bits(statusbits))
