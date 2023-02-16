@@ -1612,7 +1612,7 @@ def ld_req_maxcurrentdigpot(dest: int, source: int):
     return _pack(0x0818, dest, source)
 
 
-def ld_findtiaagain(dest: int, source: int):
+def ld_findtiagain(dest: int, source: int):
     return _pack(0x081A, dest, source)
 
 
