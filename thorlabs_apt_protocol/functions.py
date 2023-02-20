@@ -9,7 +9,7 @@ def _pack(
     *,
     param1: int = 0,
     param2: int = 0,
-    data: Optional[bytes] = None
+    data: Optional[bytes] = None,
 ):
     if data is not None:
         assert param1 == param2 == 0
@@ -2338,12 +2338,7 @@ def mot_set_movesyncharray(
     time_pos: list[int],
 ) -> bytes:
     data = struct.pack(
-        f"<HHHH{len(time_pos)}l",
-        array_id,
-        channels,
-        num_points,
-        start_ix,
-        *time_pos
+        f"<HHHH{len(time_pos)}l", array_id, channels, num_points, start_ix, *time_pos
     )
     return _pack(0x0A00, dest, source, data=data)
 
