@@ -2338,7 +2338,7 @@ def mot_set_movesyncharray(
     time_pos: list[int],
 ) -> bytes:
     data = struct.pack(
-        "<HHHH" + "l" * len(time_pos),
+        f"<HHHH{len(time_pos)}l",
         array_id,
         channels,
         num_points,
