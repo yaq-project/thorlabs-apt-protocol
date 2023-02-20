@@ -27,7 +27,7 @@ class Unpacker:
     :param on_error: Action to take if invalid data is detected.
     """
 
-    def __init__(self, file_like=None, on_error="continue"):
+    def __init__(self, file_like=None, on_error="warn"):
         if file_like is None:
             self._file = io.BytesIO()
         else:
