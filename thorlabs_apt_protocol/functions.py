@@ -1567,7 +1567,7 @@ def la_req_mmi_params(dest: int, source: int):
 
 
 def la_set_klddigoutputs(dest: int, source: int, dig_outputs: int) -> bytes:
-    data = struct.pack("<HHH", 14, dig_outputs, 0)
+    data = struct.pack("<HHH", 17, dig_outputs, 0)
     return _pack(0x0800, dest, source, data=data)
 
 
@@ -1612,7 +1612,7 @@ def ld_req_maxcurrentdigpot(dest: int, source: int):
     return _pack(0x0818, dest, source)
 
 
-def ld_findtiaagain(dest: int, source: int):
+def ld_findtiagain(dest: int, source: int):
     return _pack(0x081A, dest, source)
 
 
@@ -1626,6 +1626,10 @@ def la_req_statusupdate(dest: int, source: int):
 
 def la_ack_statusupdate(dest: int, source: int):
     return _pack(0x0822, dest, source)
+
+
+def ld_req_statusupdate(dest: int, source: int):
+    return _pack(0x0825, dest, source)
 
 
 def ld_ack_statusupdate(dest: int, source: int):

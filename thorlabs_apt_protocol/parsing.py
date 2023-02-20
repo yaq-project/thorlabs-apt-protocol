@@ -1438,7 +1438,7 @@ def nt_get_tnaiosettings(data: bytes) -> Dict[str, Any]:
     }
 
 
-@parser(0x0800)
+@parser(0x0802)
 def la_get_params(data: bytes) -> Dict[str, Any]:
     (submsgid,) = struct.unpack_from("<H", data, HEADER_SIZE)
     ret = {"submsgid": submsgid}
@@ -1452,9 +1452,6 @@ def la_get_params(data: bytes) -> Dict[str, Any]:
     elif submsgid == 4:
         current, power, voltage = struct.unpack_from("<Hhh", data, HEADER_SIZE)
         ret.update({"current": current, "power": power, "voltage": voltage})
-    elif submsgid == 5:
-        (laser_source,) = struct.unpack_from("<H", data, HEADER_SIZE)
-        ret.update({"laser_source": laser_source})
     elif submsgid == 5:
         (laser_source,) = struct.unpack_from("<H", data, HEADER_SIZE)
         ret.update({"laser_source": laser_source})
