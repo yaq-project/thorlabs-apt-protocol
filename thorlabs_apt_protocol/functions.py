@@ -1,5 +1,6 @@
 from typing import Optional, Sequence
 import struct
+from __future__ import annotations
 
 
 def _pack(
